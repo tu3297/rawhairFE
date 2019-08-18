@@ -1,0 +1,245 @@
+import React from 'react'
+import reactCSS from 'reactcss'
+import { SketchPicker } from 'react-color'
+import { Input,Modal,Table,Icon,Button,Popconfirm } from 'antd';
+import Highlighter from 'react-highlight-words';
+import { connect } from 'react-redux';
+const data = [
+    {
+      key: '1',
+      name: 'John Brown',
+      colorCode: 32
+    },
+    { 
+      key: '2',
+      name: 'Joe Black',
+      colorCode: 42
+    },
+    {
+      key: '3',
+      name: 'Jim Green',
+      colorCode: 32
+    },
+    {
+      key: '4',
+      name: 'Jim Red',
+      colorCode: 32
+    },
+  ];
+  function  mapStateToProps(state,ownProps){
+    return state;
+  }
+  function  mapDispatchToProps(dispatch){
+    return null;
+  }
+class AddColor extends React.Component {
+  state = {
+    displayColorPicker: false,
+    color: {
+      r: '241',
+      g: '112',
+      b: '19',
+      a: '1',
+    },
+    nameColor : '',
+    hexColor :'',
+    visible : false
+  };
+
+  handleClick = () => {
+    this.setState({ displayColorPicker: !this.state.displayColorPicker })
+  };
+
+  handleClose = () => {
+    this.setState({ displayColorPicker: false })
+  };
+
+  handleChange = (color) => {
+    this.setState({ color: color.rgb,hexColor : color.hex})
+  };
+  handleOk = e => {
+    console.log(this.state);
+    this.setState({
+      visible: false
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+  handleInput = e =>{
+       console.log(e.target.value);
+       this.setState({
+           nameColor : e.target.value
+       })
+  }
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => (
+      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text => (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[this.state.searchText]}
+        autoEscape
+        textToHighlight={text.toString()}
+      />
+    ),
+  });
+  handAddColor = () =>{
+    this.setState({
+        visible: true
+      });
+  }
+  handleDelete = ()=>{
+    this.setState({
+        visible: false
+      });
+  }
+  handleEdit = (record) =>{
+        console.log(record);
+        this.setState({
+            visible:true,
+            nameColor : record.name,
+            hexColor:record.colorCode
+        });
+  }
+  render() {
+    const styles = reactCSS({
+        'default': {
+          color: {
+            width: '70px',
+            height: '15px',
+            color :'#8B0000',
+            borderRadius: '2px',
+            background: `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`,
+          },
+          swatch: {
+            padding: '5px',
+            background: '#fff',
+            borderRadius: '1px',
+            boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
+            display: 'inline-block',
+            cursor: 'pointer',
+          },
+          popover: {
+            position: 'absolute',
+            zIndex: '2',
+          },
+          cover: {
+            position: 'fixed',
+            top: '0px',
+            right: '0px',
+            bottom: '0px',
+            left: '0px',
+          }
+        },
+      });
+     let pickColor = <div>
+     <div style={ styles.swatch } onClick={ this.handleClick }>
+       <div style={ styles.color } > {this.state.hexColor} </div>
+     </div>
+     { this.state.displayColorPicker ? <div style={ styles.popover }>
+       <div style={ styles.cover } onClick={ this.handleClose }/>
+       <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
+     </div> : null }
+   </div>
+    const columns = [
+      {
+        title: 'Color name',
+        dataIndex: 'name',
+        key: 'name',
+        width: '20%',
+        ...this.getColumnSearchProps('name'),
+      },
+      {
+        title: 'Color Code',
+        dataIndex: 'colorCode',
+        key: 'colorCode',
+        width: '10%'
+      },
+      {
+          width:'5%',
+          title : 'Action',
+          key : 'action',
+          render : (text, record) => 
+          <div className="d-flex justify-content-center">
+              <Button className="mr-1" onClick={() => this.handleEdit(record)}>Edit</Button>
+              <Popconfirm title="Sure to delte?" onConfirm={() => this.handleDelete(record.key)}>
+                <Button type="danger">Delete</Button>
+              </Popconfirm>
+          </div> 
+      }
+    ];
+    let modalAdd =<div>
+        <Modal
+            title="Add Color"
+            visible= {this.state.visible}
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}>
+        <div className="pickColor">
+            <Input value={this.state.nameColor} onChange={this.handleInput} placeholder="Pick Color" addonAfter={pickColor} />
+        </div>
+       </Modal>
+    </div>
+    return (
+    <div className="container">
+         <div className="float-right mb-1 mt-1">
+        <Button onClick = {this.handAddColor}>
+              Add Color
+         </Button>
+         </div>
+         <div className="clearfix"/>
+        <div class = "row ">
+           <div className="col-12">
+             <Table columns={columns} bordered dataSource={data}/>
+           </div>
+        </div>
+        {this.state.visible ? modalAdd : null}
+    </div>
+   );
+}
+}
+export default  connect(
+  mapStateToProps, 
+  mapDispatchToProps,
+)(AddColor);;

@@ -1,0 +1,27 @@
+.sub-menu {
+    padding: 6px 0;
+    margin-bottom : 10px;
+    background-color: #fafbfc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    .sub-menu-container {
+        display: flex;
+        justify-content: center;
+        .menu-item {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12px;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: normal;
+            letter-spacing: normal;
+        }
+        .nav-link {
+            color: #9b9b9b;
+            margin-bottom: 5px 0;
+        }
+        .active-menu {
+            color: #ff9500;
+            font-weight: bold;
+        }
+    }
+    
+}

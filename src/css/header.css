@@ -1,0 +1,55 @@
+.header:after {
+    content: " ";
+    display: block;
+    background: #cccccc;
+    height: 1px;
+    width: 100%;
+    position: absolute;
+    bottom: -8px;
+}
+
+.header img {
+    width: 10%;
+    height: 90%;
+    margin-left: 45%;
+}
+.header li {
+    display: inline;
+    margin: 5%;
+    text-align: center;
+}
+.header li a:link,
+.header li a:visited {
+    text-decoration: none;
+    color: #000000;
+    text-transform: uppercase;
+    font-size: 90%;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom 0.2s;
+
+}
+.header li a:hover,
+.header  li a:active {
+    border-bottom: 2px solid #404040;
+}
+.main-nav {
+    float: right;
+    list-style: none;
+    height: 100%;
+    margin-right: 40px;
+}
+.btn-res {
+    display: inline-block;
+}
+.ant-carousel .slick-slide {
+    width: 90%;
+    text-align: center;
+    height: 160px;
+    line-height: 160px;
+    background: #364d79;
+    overflow: hidden;
+  }
+  
+  .ant-carousel .slick-slide h3 {
+    color: #fff;
+  }
