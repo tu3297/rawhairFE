@@ -55,13 +55,13 @@ class Home extends Component {
                    </div>              
                 </div>
                 </div>
-                <div class ="col-4">
-                     <ul class="nav">
-                        <li class="nav-link" ><Link to={{
+                <div className ="col-4">
+                     <ul className="nav">
+                        <li className="nav-link" ><Link to={{
                           pathname: '/modalLogin',
                           state: {modal: true}}}>Đăng Nhập</Link>
                         </li>
-                        <li class="nav-link"><Link to={{
+                        <li className="nav-link"><Link to={{
                           pathname: '/cart',
                           state: {cart: true}}}>Giỏ Hàng</Link>
                         </li>

@@ -4,6 +4,9 @@ import { SketchPicker } from 'react-color'
 import { Input,Modal,Table,Icon,Button,Popconfirm } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { connect } from 'react-redux';
+import { 
+  colorActions
+} from '../ducks/color';
 const data = [
     {
       key: '1',
@@ -26,12 +29,15 @@ const data = [
       colorCode: 32
     },
   ];
-  function  mapStateToProps(state,ownProps){
+  const mapStateToProps = (state) => {
+    console.log(state);
     return state;
-  }
-  function  mapDispatchToProps(dispatch){
-    return null;
-  }
+  };
+  const mapDispatchToProps = (dispatch) => ({
+      fetchGetAllColor : () => {
+      dispatch({type : 'color/FETCH_GET_COLOR'});
+    }
+  });
 class AddColor extends React.Component {
   state = {
     displayColorPicker: false,
@@ -45,7 +51,10 @@ class AddColor extends React.Component {
     hexColor :'',
     visible : false
   };
-
+  componentDidMount(){
+    const { fetchGetAllColor } = this.props;
+    fetchGetAllColor();
+  }
   handleClick = () => {
     this.setState({ displayColorPicker: !this.state.displayColorPicker })
   };
@@ -237,9 +246,9 @@ class AddColor extends React.Component {
         {this.state.visible ? modalAdd : null}
     </div>
    );
-}
+  }
 }
 export default  connect(
   mapStateToProps, 
   mapDispatchToProps,
-)(AddColor);;
+)(AddColor);

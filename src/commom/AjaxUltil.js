@@ -1,6 +1,6 @@
 import querystring from 'query-string';
 
-const API_ENDPOINT = 'https://localhost:8080/';
+const API_ENDPOINT = 'https://localhost:5000/';
 
 function buildHeaders(headers){
   return {
@@ -38,6 +38,7 @@ function handleErrorResponse(response) {
 
 const Api = {
 	get: (url, option) => {
+    console.log('api');
 		return request({
       url,
 			init: {

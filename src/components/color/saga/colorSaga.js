@@ -13,12 +13,11 @@ import {
   } from '../apis/color';
 
   export function* getListColor(action) {
+    console.log('aaaa');
     const response = yield call(fetchListColor);
     yield put(colorActions.fetchGetListColorSuccess(response));
   }
   
   export function* watchColorAction() {
-    yield all([
-      takeEvery(colorTypes.FETCH_LIST_COLOR, getListColor)
-    ])
+    yield takeEvery(colorTypes.FETCH_LIST_COLOR, getListColor)
   }
