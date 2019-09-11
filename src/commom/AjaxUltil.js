@@ -17,10 +17,10 @@ function request(props){
     query,
     option,
   } = props;
-
+ 
   let strQuery = query ? `?${querystring.stringify(query)}` : '',
       fetchUrl = `${API_ENDPOINT}/${url}${strQuery}`;
-  
+ console.log(strQuery); 
   return fetch(fetchUrl, {
       method: init.method,
       headers: buildHeaders(init.headers),
@@ -48,6 +48,7 @@ const Api = {
     })
   },
   post: (url, option) => {
+    console.log('api post');
 		return request({
       url,
 			init: {

@@ -18,6 +18,19 @@ export default function user(state = initState,action){
           listColor : action.payload
         }
     }
+    case types.ADD_COLOR : {
+      return {
+        ...state,
+        isFetching : true
+      }
+    }
+    case types.ADD_COLOR_SUCCESS : {
+      return {
+      ...state,
+      isFetching : false,
+      color : action.color
+      }
+    }
     default: 
     return state
    }

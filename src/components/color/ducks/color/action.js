@@ -8,3 +8,7 @@ export const fetchGetListColorSuccess = payload => ({
         type : types.FETCH_LIST_COLOR_SUCCESS,
         payload : ['a']
 });
+export const addColorSuccess = (data) => ({
+       type : types.ADD_COLOR_SUCCESS,
+       payload: data
+});

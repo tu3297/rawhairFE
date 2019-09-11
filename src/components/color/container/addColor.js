@@ -4,8 +4,10 @@ import { SketchPicker } from 'react-color'
 import { Input,Modal,Table,Icon,Button,Popconfirm } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { connect } from 'react-redux';
+import Types from '../ducks/color/type';
 import { 
-  colorActions
+  colorActions,
+  colorTypes
 } from '../ducks/color';
 const data = [
     {
@@ -34,8 +36,11 @@ const data = [
     return state;
   };
   const mapDispatchToProps = (dispatch) => ({
-      fetchGetAllColor : () => {
-      dispatch({type : 'color/FETCH_GET_COLOR'});
+    fetchGetAllColor : () => {
+      dispatch({type : colorTypes.FETCH_LIST_COLOR});
+    },
+    createColor : (colorData) => {
+      dispatch({type : colorTypes.ADD_COLOR , data : colorData})
     }
   });
 class AddColor extends React.Component {
@@ -64,13 +69,17 @@ class AddColor extends React.Component {
   };
 
   handleChange = (color) => {
-    this.setState({ color: color.rgb,hexColor : color.hex})
+    this.setState({ color: color.rgb , hexColor : color.hex})
   };
   handleOk = e => {
-    console.log(this.state);
-    this.setState({
-      visible: false
-    });
+    console.log('handle add');
+    const { color , hexColor , nameColor } = this.state;
+    let corlorData = {
+      color : color,
+      hexColor : hexColor,
+      nameColor : nameColor
+    }
+    this.props.createColor(corlorData);
   };
 
   handleCancel = e => {
