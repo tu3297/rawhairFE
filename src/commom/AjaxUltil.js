@@ -1,10 +1,9 @@
 import querystring from 'query-string';
 
-const API_ENDPOINT = 'https://localhost:5000/';
+const API_ENDPOINT = 'http://localhost:5000';
 
 function buildHeaders(headers){
   return {
-    'Accept': 'application/json',
     'Content-Type': 'application/json',
     ...headers,
   };
@@ -38,7 +37,7 @@ function handleErrorResponse(response) {
 
 const Api = {
 	get: (url, option) => {
-    console.log('api');
+    console.log('api get');
 		return request({
       url,
 			init: {

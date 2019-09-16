@@ -32,15 +32,14 @@ const data = [
     },
   ];
   const mapStateToProps = (state) => {
-    console.log(state);
     return state;
   };
   const mapDispatchToProps = (dispatch) => ({
     fetchGetAllColor : () => {
-      dispatch({type : colorTypes.FETCH_LIST_COLOR});
+      dispatch(colorActions.fetchGetListColor());
     },
     createColor : (colorData) => {
-      dispatch({type : colorTypes.ADD_COLOR , data : colorData})
+      dispatch(colorActions.addColor(colorData))
     }
   });
 class AddColor extends React.Component {
@@ -79,17 +78,16 @@ class AddColor extends React.Component {
       hexColor : hexColor,
       nameColor : nameColor
     }
-    this.props.createColor(corlorData);
+    const { createColor } = this.props;
+    createColor(corlorData);
   };
 
   handleCancel = e => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
   handleInput = e =>{
-       console.log(e.target.value);
        this.setState({
            nameColor : e.target.value
        })
