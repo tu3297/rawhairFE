@@ -7,7 +7,7 @@ export function fetchListColor() {
     null, 
   );
 }
-export function fetachaddColor(colorData){
+export function fetchaddColor(colorData){
   console.log('addd');
   const addColor = 'color/addColor';
   return api.post(addColor,colorData);

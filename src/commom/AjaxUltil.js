@@ -17,12 +17,11 @@ function request(props){
     option,
   } = props;
  
-  let strQuery = query ? `?${querystring.stringify(query)}` : '',
-      fetchUrl = `${API_ENDPOINT}/${url}${strQuery}`;
- console.log(strQuery); 
+  let strQuery = query ? `?${querystring.stringify(query)}` : '', fetchUrl = `${API_ENDPOINT}/${url}${strQuery}`;
   return fetch(fetchUrl, {
       method: init.method,
       headers: buildHeaders(init.headers),
+      body : option === null ? option : JSON.stringify(option)
     })
     .then(handleErrorResponse)
 }
@@ -37,7 +36,6 @@ function handleErrorResponse(response) {
 
 const Api = {
 	get: (url, option) => {
-    console.log('api get');
 		return request({
       url,
 			init: {
@@ -47,7 +45,6 @@ const Api = {
     })
   },
   post: (url, option) => {
-    console.log('api post');
 		return request({
       url,
 			init: {

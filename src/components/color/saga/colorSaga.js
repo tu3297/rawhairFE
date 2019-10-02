@@ -11,22 +11,23 @@ import {
   } from '../ducks/color';
   import { 
     fetchListColor,
-    fetachaddColor
+    fetchaddColor
   } from '../apis/color';
 
 export function* getListColor(action) {
-    console.log('create fetch');
     const response = yield call(fetchListColor);
-    yield put(colorActions.fetchGetListColorSuccess('response'));
+    yield put(colorActions.fetchGetListColorSuccess(response));
   }
   export function* watchColorAction() {
     yield takeEvery(colorTypes.FETCH_LIST_COLOR, getListColor)
   }
   export function* createColor(action){
-    console.log('add color');
+    console.log(action);
     try{
-       //const response = yield call(fetachaddColor,action.data);
-       yield put(colorActions.addColorSuccess('response'));
+       const response = yield call(fetchaddColor,action.payload);
+       yield put(colorActions.addColorSuccess(response));
+       const response1 = yield call(fetchListColor);
+       yield put(colorActions.fetchGetListColorSuccess(response1));
     } catch(error){
       console.log(error);
     }

@@ -5,34 +5,19 @@ import { Input,Modal,Table,Icon,Button,Popconfirm } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { connect } from 'react-redux';
 import Types from '../ducks/color/type';
+import Loading from '../../loading/loading.js';
 import { 
   colorActions,
   colorTypes
 } from '../ducks/color';
 const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      colorCode: 32
-    },
-    { 
-      key: '2',
-      name: 'Joe Black',
-      colorCode: 42
-    },
-    {
-      key: '3',
-      name: 'Jim Green',
-      colorCode: 32
-    },
-    {
-      key: '4',
-      name: 'Jim Red',
-      colorCode: 32
-    },
   ];
   const mapStateToProps = (state) => {
-    return state;
+    const {listColor , isFetching } = state.color;
+    return {
+      listColors : listColor,
+      isFetching : isFetching
+    };
   };
   const mapDispatchToProps = (dispatch) => ({
     fetchGetAllColor : () => {
@@ -44,6 +29,7 @@ const data = [
   });
 class AddColor extends React.Component {
   state = {
+    listColors : [],
     displayColorPicker: false,
     color: {
       r: '241',
@@ -70,19 +56,20 @@ class AddColor extends React.Component {
   handleChange = (color) => {
     this.setState({ color: color.rgb , hexColor : color.hex})
   };
-  handleOk = e => {
-    console.log('handle add');
-    const { color , hexColor , nameColor } = this.state;
-    let corlorData = {
-      color : color,
-      hexColor : hexColor,
-      nameColor : nameColor
+   handleOk = async(e) => {
+    const {hexColor , nameColor } = this.state;
+    let corlor = {
+      colorCode : hexColor,
+      colorName : nameColor
     }
     const { createColor } = this.props;
-    createColor(corlorData);
+    const flagAdd = await createColor(corlor);
+    this.setState({
+      visible : false
+    })
   };
 
-  handleCancel = e => {
+  handleCancel = () => {
     this.setState({
       visible: false,
     });
@@ -160,6 +147,7 @@ class AddColor extends React.Component {
         });
   }
   render() {
+    const {listColors , isFetching} = this.props;
     const styles = reactCSS({
         'default': {
           color: {
@@ -202,8 +190,8 @@ class AddColor extends React.Component {
     const columns = [
       {
         title: 'Color name',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'colorName',
+        key: 'colorName',
         width: '20%',
         ...this.getColumnSearchProps('name'),
       },
@@ -239,6 +227,7 @@ class AddColor extends React.Component {
     </div>
     return (
     <div className="container">
+      <Loading isLoading ={ isFetching }/>
          <div className="float-right mb-1 mt-1">
         <Button onClick = {this.handAddColor}>
               Add Color
@@ -247,7 +236,7 @@ class AddColor extends React.Component {
          <div className="clearfix"/>
         <div class = "row ">
            <div className="col-12">
-             <Table columns={columns} bordered dataSource={data}/>
+             <Table columns={columns} bordered dataSource={listColors}/>
            </div>
         </div>
         {this.state.visible ? modalAdd : null}
