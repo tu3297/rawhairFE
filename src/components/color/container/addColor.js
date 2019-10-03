@@ -13,6 +13,7 @@ import {
 const data = [
   ];
   const mapStateToProps = (state) => {
+    console.log(state);
     const {listColor , isFetching } = state.color;
     return {
       listColors : listColor,
@@ -32,14 +33,27 @@ class AddColor extends React.Component {
     listColors : [],
     displayColorPicker: false,
     color: {
-      r: '241',
-      g: '112',
-      b: '19',
-      a: '1',
+      r: '',
+      g: '',
+      b: '',
+      a: '',
     },
     nameColor : '',
     hexColor :'',
-    visible : false
+    colorId :'',
+    visible : false,
+    error :{
+      blank :
+          {
+            isBlank : false,
+            blankContent : 'Không để dữ liệu trống !!'
+          },
+      duplicate :
+      {
+            isDuplicate : false,
+            duplicateData :'Màu này đã tồn tại !!'
+      }
+    }
   };
   componentDidMount(){
     const { fetchGetAllColor } = this.props;
@@ -56,17 +70,30 @@ class AddColor extends React.Component {
   handleChange = (color) => {
     this.setState({ color: color.rgb , hexColor : color.hex})
   };
-   handleOk = async(e) => {
-    const {hexColor , nameColor } = this.state;
+  handleOk = async(e) => {
+    this.setState(state => (state.error.blank.isBlank = false, state))
+    this.setState(state => (state.error.duplicate.isDuplicate = false, state))
+    const { hexColor , nameColor ,colorId } = this.state;
     let corlor = {
+      colorId : colorId,
       colorCode : hexColor,
       colorName : nameColor
     }
-    const { createColor } = this.props;
-    const flagAdd = await createColor(corlor);
-    this.setState({
-      visible : false
-    })
+    if(hexColor === '' || nameColor === ''){
+      this.setState(state => (state.error.blank.isBlank = true, state))
+      this.setState(state => (state.error.duplicate.isDuplicate = false, state))
+    } else {
+     this.setState(state => (state.error.blank.isBlank = false, state))
+     let isDuplicate = this.props.listColors.some(color => {
+     return (color.colorName === nameColor || color.colorCode === hexColor)
+   });
+   this.setState(state => (state.error.duplicate.isDuplicate = isDuplicate, state))
+  }
+  // const { createColor } = this.props;
+  //   const flagAdd = await createColor(corlor);
+  //   this.setState({
+  //     visible : false
+  //   })
   };
 
   handleCancel = () => {
@@ -129,6 +156,12 @@ class AddColor extends React.Component {
     ),
   });
   handAddColor = () =>{
+    this.setState(state => (state.error.blank.isBlank = false, state));
+    this.setState(state => (state.error.duplicate.isDuplicate = false, state));
+    this.setState({
+      nameColor : '',
+      hexColor :''
+    })
     this.setState({
         visible: true
       });
@@ -142,7 +175,8 @@ class AddColor extends React.Component {
         console.log(record);
         this.setState({
             visible:true,
-            nameColor : record.name,
+            colorId : record.colorId,
+            nameColor : record.colorName,
             hexColor:record.colorCode
         });
   }
@@ -223,6 +257,8 @@ class AddColor extends React.Component {
         <div className="pickColor">
             <Input value={this.state.nameColor} onChange={this.handleInput} placeholder="Pick Color" addonAfter={pickColor} />
         </div>
+        {this.state.error.blank.isBlank ? <div>{this.state.error.blank.blankContent}</div> : null}
+        {this.state.error.duplicate.isDuplicate ? <div>{this.state.error.duplicate.duplicateData}</div> : null}
        </Modal>
     </div>
     return (

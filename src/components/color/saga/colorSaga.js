@@ -24,10 +24,10 @@ export function* getListColor(action) {
   export function* createColor(action){
     console.log(action);
     try{
-       const response = yield call(fetchaddColor,action.payload);
-       yield put(colorActions.addColorSuccess(response));
-       const response1 = yield call(fetchListColor);
-       yield put(colorActions.fetchGetListColorSuccess(response1));
+       const responseAdd = yield call(fetchaddColor,action.payload);
+       yield put(colorActions.addColorSuccess(responseAdd));
+       const responseList = yield call(fetchListColor);
+       yield put(colorActions.fetchGetListColorSuccess(responseList));
     } catch(error){
       console.log(error);
     }
