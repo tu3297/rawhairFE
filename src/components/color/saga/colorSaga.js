@@ -10,12 +10,13 @@ import {
     colorActions,
   } from '../ducks/color';
   import { 
-    fetchListColor,
-    fetchaddColor
+    fetchListColorApi,
+    fetchaddColorApi,
+    deleteColorApi
   } from '../apis/color';
 
 export function* getListColor(action) {
-    const response = yield call(fetchListColor);
+    const response = yield call(fetchListColorApi);
     yield put(colorActions.fetchGetListColorSuccess(response));
   }
   export function* watchColorAction() {
@@ -24,9 +25,9 @@ export function* getListColor(action) {
   export function* createColor(action){
     console.log(action);
     try{
-       const responseAdd = yield call(fetchaddColor,action.payload);
+       const responseAdd = yield call(fetchaddColorApi,action.payload);
        yield put(colorActions.addColorSuccess(responseAdd));
-       const responseList = yield call(fetchListColor);
+       const responseList = yield call(fetchListColorApi);
        yield put(colorActions.fetchGetListColorSuccess(responseList));
     } catch(error){
       console.log(error);
@@ -34,4 +35,19 @@ export function* getListColor(action) {
   }
   export function* watchCreatColor() {
     yield takeLatest(colorTypes.ADD_COLOR, createColor)
+  }
+  export function* deleteColor(action){
+    console.log(action);
+    try{
+       const responseDelete = yield call(deleteColorApi,action.payload);
+       console.log(responseDelete);
+       yield put(colorActions.deleteColorSuccess(responseDelete));
+       const responseList = yield call(fetchListColorApi);
+       yield put(colorActions.fetchGetListColorSuccess(responseList));
+    } catch(error){
+      console.log(error);
+    }
+  }
+  export function* watchDeleteColor() {
+    yield takeLatest(colorTypes.DELETE_COLOR, deleteColor)
   }

@@ -26,6 +26,9 @@ const data = [
     },
     createColor : (colorData) => {
       dispatch(colorActions.addColor(colorData))
+    },
+    deleteColor : (colorId) => {
+      dispatch(colorActions.deleteColor(colorId))
     }
   });
 class AddColor extends React.Component {
@@ -68,32 +71,42 @@ class AddColor extends React.Component {
   };
 
   handleChange = (color) => {
-    this.setState({ color: color.rgb , hexColor : color.hex})
+    console.log(color);
+    let isDuplicate = this.props.listColors.some(item => {
+      return (item.colorCode === color.hex)
+    });
+    if(isDuplicate){
+      this.setState(state => (
+        state.error.duplicate.isDuplicate = true,
+        state.hexColor = color.hexColor,
+        state)
+      );
+    } else {
+      this.setState(state => (
+        state.error.duplicate.isDuplicate = false,
+        state.hexColor = color.hex,
+        state.hexColor = color.hex,
+        state)
+      );
+    }
   };
   handleOk = async(e) => {
-    this.setState(state => (state.error.blank.isBlank = false, state))
-    this.setState(state => (state.error.duplicate.isDuplicate = false, state))
+    if(this.state.error.blank.isBlank || this.state.error.duplicate.isDuplicate || this.state.hexColor === ''){
+      this.setState(state => (
+        state.error.blank.isBlank = true,state))
+    } else {
     const { hexColor , nameColor ,colorId } = this.state;
-    let corlor = {
+    let color = {
       colorId : colorId,
       colorCode : hexColor,
       colorName : nameColor
     }
-    if(hexColor === '' || nameColor === ''){
-      this.setState(state => (state.error.blank.isBlank = true, state))
-      this.setState(state => (state.error.duplicate.isDuplicate = false, state))
-    } else {
-     this.setState(state => (state.error.blank.isBlank = false, state))
-     let isDuplicate = this.props.listColors.some(color => {
-     return (color.colorName === nameColor || color.colorCode === hexColor)
-   });
-   this.setState(state => (state.error.duplicate.isDuplicate = isDuplicate, state))
-  }
-  // const { createColor } = this.props;
-  //   const flagAdd = await createColor(corlor);
-  //   this.setState({
-  //     visible : false
-  //   })
+  const { createColor } = this.props;
+   const flagAdd = await createColor(color);
+    this.setState({
+      visible : false
+    })
+    }
   };
 
   handleCancel = () => {
@@ -102,9 +115,31 @@ class AddColor extends React.Component {
     });
   };
   handleInput = e =>{
-       this.setState({
-           nameColor : e.target.value
-       })
+    let nameColor = e.target.value;
+    let isDuplicate = this.props.listColors.some(color => {
+          return (color.colorName === nameColor)
+    });
+    if(nameColor === ""){
+      this.setState(state => (
+        state.error.blank.isBlank = true,
+        state.nameColor = "",
+        state)
+      );
+      console.log(this.state);
+    } else if (isDuplicate) {
+      this.setState(state => (
+        state.error.duplicate.isDuplicate = true,
+        state.nameColor = nameColor,
+        state)
+      );
+    } else {
+      this.setState(state => (
+        state.error.blank.isBlank = false,
+        state.error.duplicate.isDuplicate = false,
+        state.nameColor = nameColor,
+        state)
+      );
+    }
   }
   getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -155,7 +190,7 @@ class AddColor extends React.Component {
       />
     ),
   });
-  handAddColor = () =>{
+  handAddColor = () => {
     this.setState(state => (state.error.blank.isBlank = false, state));
     this.setState(state => (state.error.duplicate.isDuplicate = false, state));
     this.setState({
@@ -166,10 +201,10 @@ class AddColor extends React.Component {
         visible: true
       });
   }
-  handleDelete = ()=>{
-    this.setState({
-        visible: false
-      });
+  handleDelete = async(key)=>{
+    console.log(key);
+    const { deleteColor } = this.props;
+    const flagAdd = await deleteColor(key);
   }
   handleEdit = (record) =>{
         console.log(record);
@@ -242,7 +277,7 @@ class AddColor extends React.Component {
           render : (text, record) => 
           <div className="d-flex justify-content-center">
               <Button className="mr-1" onClick={() => this.handleEdit(record)}>Edit</Button>
-              <Popconfirm title="Sure to delte?" onConfirm={() => this.handleDelete(record.key)}>
+              <Popconfirm title="Sure to delte?" onConfirm={() => this.handleDelete(record.colorId)}>
                 <Button type="danger">Delete</Button>
               </Popconfirm>
           </div> 
@@ -262,8 +297,9 @@ class AddColor extends React.Component {
        </Modal>
     </div>
     return (
+    
     <div className="container">
-      <Loading isLoading ={ isFetching }/>
+        <Loading  isLoading ={ !isFetching }/>
          <div className="float-right mb-1 mt-1">
         <Button onClick = {this.handAddColor}>
               Add Color

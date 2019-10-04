@@ -3,4 +3,5 @@ export const FETCH_LIST_COLOR_SUCCESS = 'color/FETCH_LIST_COLOR_SUCCESS';
 export const ADD_COLOR = 'color/ADD_COLOR';
 export const ADD_COLOR_SUCCESS = 'color/ADD_COLOR_SUCCESS';
 export const DELETE_COLOR = 'color/DELETE_COLOR';
+export const DELETE_COLOR_SUCCESS = 'color/DELETE_COLOR_SUCCESS';
 export const UPDATE_COLOR ='color/UPDATE_COLOR';

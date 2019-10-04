@@ -16,3 +16,11 @@ export const addColor = (data) => ({
         type : types.ADD_COLOR,
         payload: data
 });
+export const deleteColor = (colorId) => ({
+        type : types.DELETE_COLOR,
+        payload: colorId
+});
+export const deleteColorSuccess = (data) => ({
+        type : types.DELETE_COLOR_SUCCESS,
+        payload: data
+});
