@@ -299,7 +299,7 @@ class AddColor extends React.Component {
     return (
     
     <div className="container">
-        <Loading  isLoading ={ !isFetching }/>
+        <Loading  isLoading ={ isFetching }/>
          <div className="float-right mb-1 mt-1">
         <Button onClick = {this.handAddColor}>
               Add Color

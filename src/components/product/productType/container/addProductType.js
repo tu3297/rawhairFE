@@ -1,5 +1,6 @@
-import { Table, Input, Button, Popconfirm, Form,Select } from 'antd';
+import { Table, Input, Button, Form,Select } from 'antd';
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 const EditableContext = React.createContext();
 
 const EditableRow = ({ form, index, ...props }) => (
@@ -31,7 +32,9 @@ class EditableCell extends React.Component {
         return;
       }
       this.toggleEdit();
-      handleSave({ ...record, ...values });
+      let {editing} = this.state;
+      record.editing = editing;
+      handleSave({...record, ...values });
     });
   };
 
@@ -55,8 +58,7 @@ class EditableCell extends React.Component {
       <div
         className="editable-cell-value-wrap"
         style={{ paddingRight: 24 }}
-        onClick={this.toggleEdit}
-      >
+        onClick={this.toggleEdit}>
         {children}
       </div>
     );
@@ -84,7 +86,11 @@ class EditableCell extends React.Component {
     );
   }
 }
-
+const mapStateToProps = (state) => {
+    return null;
+};
+const mapDispatchToProps = (dispatch) => ({
+});
 class AddProductType extends React.Component {
   constructor(props) {
     super(props);
@@ -99,34 +105,13 @@ class AddProductType extends React.Component {
         title: 'Description',
         dataIndex: 'description',
         editable :true
-      },
-      {
-        title: 'Action',
-        dataIndex: 'action',
-        render: (text, record) =>
-          this.state.dataSource.length >= 1 ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-              <a href="javascript:;">Delete</a>
-            </Popconfirm>
-          ) : null,
-      },
+      }
     ];
 
     this.state = {
       selectedRowKeys: [],
-      dataSource: [
-        {
-          key: '0',
-          name: 'Edward King 0',
-          description: 'London, Park Lane no. 0',
-        },
-        {
-          key: '1',
-          name: 'Edward King 1',
-          description: 'London, Park Lane no. 1',
-        },
-      ],
-      count: 2,
+      dataSource: [],
+      count : 0
     };
   }
   onSelectChange = selectedRowKeys => {
@@ -140,30 +125,30 @@ class AddProductType extends React.Component {
   };
 
   handleAdd = () => {
-    const { count, dataSource } = this.state;
+    const { dataSource, count } = this.state;
     const newData = {
+      id : '',
       key: count,
-      name: `Edward King ${count}`,
-      age: 32,
-      address: `London, Park Lane no. ${count}`,
+      name: 'Pls enter data',
+      description: 'Pls enter data',
+      editing : false
     };
     this.setState({
-      dataSource: [...dataSource, newData],
-      count: count + 1,
+      count : count +1,
+      dataSource: [...dataSource, newData]
     });
   };
 
-  handleSave = row => {
-    const newData = [...this.state.dataSource];
-    const index = newData.findIndex(item => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, {
-      ...item,
-      ...row,
-    });
-    this.setState({ dataSource: newData });
+  handleSave = (data) => {
+    const { dataSource } = this.state;
+    console.log(data);
+    let index = dataSource.findIndex(item => item.key === data.key);
+    console.log(index);
+    dataSource.splice(index,1,data);
   };
-
+  saveProductType = () =>{
+     console.log(this.state);
+  }
   render() {
     const {selectedRowKeys } = this.state;
     const rowSelection = {
@@ -198,10 +183,10 @@ class AddProductType extends React.Component {
         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
           Add a row
         </Button>
-        <Button className="ml-2" onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+        <Button className="ml-2" onClick={this.saveProductType} type="primary" style={{ marginBottom: 16 }}>
            Save
         </Button>
-        <Button className="ml-2" onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+        <Button className="ml-2" onClick={this.handleDelete} type="primary" style={{ marginBottom: 16 }}>
            Delete
         </Button>
         <Table
@@ -216,4 +201,7 @@ class AddProductType extends React.Component {
     );
   }
 }
-export default AddProductType;
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps,
+)(AddProductType);

@@ -3,7 +3,7 @@ import { Switch, Route, Link } from "react-router-dom";
 import Sidebar from '../../commom/LinklNav.js';
 import AddColor from '../color/container/addColor.js';
 import Size from '../size/addSize.js';
-import ProductType from '../product/productType/addProductType.js';
+import ProductType from '../product/productType/container/addProductType';
 import ProductTypeSize from '../product/productTypeSize/addProductTypeSize.js';
 const subMenu = [
     {
