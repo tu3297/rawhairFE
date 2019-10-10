@@ -45,6 +45,7 @@ const Api = {
     })
   },
   post: (url, option) => {
+    console.log('get');
 		return request({
       url,
 			init: {

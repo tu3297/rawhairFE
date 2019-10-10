@@ -1,6 +1,10 @@
 import { Table, Input, Button, Form,Select } from 'antd';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { 
+  productTypeAction,
+  ptTypes
+} from '../ducks/productType';
 const EditableContext = React.createContext();
 
 const EditableRow = ({ form, index, ...props }) => (
@@ -48,7 +52,7 @@ class EditableCell extends React.Component {
           rules: [
             {
               required: true,
-              message: `${title} is required.`,
+              message: 'loi'
             },
           ],
           initialValue: record[dataIndex],
@@ -87,9 +91,12 @@ class EditableCell extends React.Component {
   }
 }
 const mapStateToProps = (state) => {
-    return null;
+    return {};
 };
 const mapDispatchToProps = (dispatch) => ({
+    createProductType : (productTypeData) => {
+       dispatch(productTypeAction.addProductType(productTypeData));
+    }
 });
 class AddProductType extends React.Component {
   constructor(props) {
@@ -141,13 +148,22 @@ class AddProductType extends React.Component {
 
   handleSave = (data) => {
     const { dataSource } = this.state;
-    console.log(data);
     let index = dataSource.findIndex(item => item.key === data.key);
-    console.log(index);
-    dataSource.splice(index,1,data);
+    dataSource[index] = data;
+    console.log(dataSource);
+    this.setState({
+      dataSource : dataSource
+    })
   };
   saveProductType = () =>{
+     let {createProductType} = this.props;
+     let {dataSource , selectedRowKeys } = this.state;
      console.log(this.state);
+     let productTypeData = {
+        dataSource : dataSource,
+        selectedRowKeys : selectedRowKeys
+     }
+     createProductType(productTypeData);
   }
   render() {
     const {selectedRowKeys } = this.state;

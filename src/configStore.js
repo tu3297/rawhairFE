@@ -3,16 +3,19 @@ import {
     applyMiddleware, 
   } from 'redux';
   import createSagaMiddleware from 'redux-saga';
-  
+  import {combineReducers} from 'redux';
   import rootSaga from './components/color/saga';
-  import rootReducer from './components/color/ducks';
-  
+  import colorReducer from './components/color/ducks';
+  import productTypeReducer from './components/product/productType/ducks';
+  const rootReducer = combineReducers({
+    colorReducer,
+    productTypeReducer
+  })
   const sagaMiddleware = createSagaMiddleware()
   const store = createStore(
-    rootReducer,
-    applyMiddleware(sagaMiddleware)
+      rootReducer,
+      applyMiddleware(sagaMiddleware)
   );
-  
   sagaMiddleware.run(rootSaga)
   
   export default store;

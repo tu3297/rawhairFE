@@ -4,17 +4,15 @@ import { SketchPicker } from 'react-color'
 import { Input,Modal,Table,Icon,Button,Popconfirm } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { connect } from 'react-redux';
-import Types from '../ducks/color/type';
 import Loading from '../../loading/loading.js';
 import { 
   colorActions,
   colorTypes
 } from '../ducks/color';
-const data = [
-  ];
+const data = [];
   const mapStateToProps = (state) => {
     console.log(state);
-    const {listColor , isFetching } = state.color;
+    const {listColor , isFetching } = state.colorReducer.color;
     return {
       listColors : listColor,
       isFetching : isFetching
@@ -148,7 +146,6 @@ class AddColor extends React.Component {
           ref={node => {
             this.searchInput = node;
           }}
-          placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
@@ -316,7 +313,7 @@ class AddColor extends React.Component {
    );
   }
 }
-export default  connect(
+export default connect(
   mapStateToProps, 
   mapDispatchToProps,
 )(AddColor);

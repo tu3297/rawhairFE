@@ -14,7 +14,7 @@ import {
     fetchaddColorApi,
     deleteColorApi
   } from '../apis/color';
-export function* getListColor(action) {
+  export function* getListColor(action) {
     const response = yield call(fetchListColorApi);
     yield put(colorActions.fetchGetListColorSuccess(response));
   }

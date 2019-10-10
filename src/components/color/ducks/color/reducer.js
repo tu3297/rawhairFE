@@ -3,7 +3,7 @@ const initState = {
     listColor: [],
     isFetching: false,
   }
-export default function user(state = initState,action){
+export default function color(state = initState,action){
    switch(action.type){
     case types.FETCH_LIST_COLOR :{
          return {
