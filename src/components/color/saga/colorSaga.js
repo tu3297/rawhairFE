@@ -1,7 +1,6 @@
 import { 
     put,
     call , 
-    all,
     takeLatest,
     takeEvery,  
   } from 'redux-saga/effects';
@@ -18,9 +17,6 @@ import {
     const response = yield call(fetchListColorApi);
     yield put(colorActions.fetchGetListColorSuccess(response));
   }
-  export function* watchColorAction() {
-    yield takeEvery(colorTypes.FETCH_LIST_COLOR, getListColor)
-  }
   export function* createColor(action){
     console.log(action);
     try{
@@ -31,9 +27,6 @@ import {
     } catch(error){
       console.log(error);
     }
-  }
-  export function* watchCreatColor() {
-    yield takeLatest(colorTypes.ADD_COLOR, createColor)
   }
   export function* deleteColor(action){
     console.log(action);
@@ -46,7 +39,4 @@ import {
     } catch(error){
       console.log(error);
     }
-  }
-  export function* watchDeleteColor() {
-    yield takeLatest(colorTypes.DELETE_COLOR, deleteColor)
   }

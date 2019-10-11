@@ -91,11 +91,18 @@ class EditableCell extends React.Component {
   }
 }
 const mapStateToProps = (state) => {
-    return {};
+  const {listProductType , isFetching } = state.productTypeReducer.producttype;
+  return {
+    listProductType : listProductType,
+    isFetching : isFetching
+  };
 };
 const mapDispatchToProps = (dispatch) => ({
     createProductType : (productTypeData) => {
        dispatch(productTypeAction.addProductType(productTypeData));
+    },
+    fetchGetAllProductType : () => {
+      dispatch(productTypeAction.fetchGetListProductType());
     }
 });
 class AddProductType extends React.Component {
@@ -120,6 +127,10 @@ class AddProductType extends React.Component {
       dataSource: [],
       count : 0
     };
+  }
+  componentDidMount(){
+    const { fetchGetAllProductType } = this.props;
+    fetchGetAllProductType();
   }
   onSelectChange = selectedRowKeys => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);

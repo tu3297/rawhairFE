@@ -6,12 +6,9 @@ import Highlighter from 'react-highlight-words';
 import { connect } from 'react-redux';
 import Loading from '../../loading/loading.js';
 import { 
-  colorActions,
-  colorTypes
+  colorActions
 } from '../ducks/color';
-const data = [];
   const mapStateToProps = (state) => {
-    console.log(state);
     const {listColor , isFetching } = state.colorReducer.color;
     return {
       listColors : listColor,

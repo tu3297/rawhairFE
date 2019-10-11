@@ -15,7 +15,7 @@ export default function productType(state = initState,action){
         return {
           ...state,
           isFetching :false,
-          listColor : action.payload
+          listProductType : action.payload
         }
     }
     case types.ADD_PRODUCTTYPE : {

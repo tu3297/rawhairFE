@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-import pt from './productType';
+import producttype from './productType';
 
 export default combineReducers({
-    pt,
+    producttype,
 });
