@@ -28,3 +28,14 @@ import {
     const response = yield call(fetchListProductTypeApi);
     yield put(productTypeAction.fetchGetListProductTypeSuccess(response));
   }
+  export function* deleteProductType(action){
+    try{
+      const responseDelete = yield call(deleteProductTypeApi,action.payload);
+      console.log(responseDelete);
+      yield put(productTypeAction.deleteProductTypeSuccess(responseDelete));
+      const responseList = yield call(fetchListProductTypeApi);
+      yield put(productTypeAction.fetchGetListProductTypeSuccess(responseList));
+   } catch(error){
+     console.log(error);
+   }
+  }

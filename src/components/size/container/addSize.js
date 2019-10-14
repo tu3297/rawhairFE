@@ -1,4 +1,4 @@
-import { Table, Input, Button, Popconfirm, Form,Select } from 'antd';
+import { Table, Input, Button, Radio , Form,Select } from 'antd';
 import React, {Component} from 'react';
 const EditableContext = React.createContext();
 const { Option } = Select;
@@ -106,7 +106,7 @@ class EditableTable extends Component {
       {
         title: 'Product Type',
         dataIndex: 'producttype',
-        width: '30%',
+        width: '50%',
         editable: true,
       },
       {
@@ -120,16 +120,6 @@ class EditableTable extends Component {
         dataIndex: 'sizefrontal',
         width: '20%',
         editable: true
-      },
-      {
-        title: 'operation',
-        dataIndex: 'operation',
-        render: (text, record) =>
-          this.state.dataSource.length >= 1 ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-              <a href="javascript:;">Delete</a>
-            </Popconfirm>
-          ) : null,
       },
     ];
 
@@ -149,6 +139,7 @@ class EditableTable extends Component {
           sizefrontal: 'London, Park Lane no. 1',
         },
       ],
+      type : 'Cm',
       count: 2,
     };
   }
@@ -188,6 +179,7 @@ class EditableTable extends Component {
   };
 
   render() {
+    const {type} = this.state;
     const {selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -219,6 +211,10 @@ class EditableTable extends Component {
     });
     return (
       <div>
+       <Radio.Group value ={type} className ="float-right">
+          <Radio.Button value="Cm">Cm</Radio.Button>
+          <Radio.Button value="Inch">Inch</Radio.Button>
+        </Radio.Group>
         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
           Add a row
         </Button>

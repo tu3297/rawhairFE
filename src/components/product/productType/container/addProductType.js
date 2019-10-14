@@ -1,10 +1,12 @@
 import { Table, Input, Button, Form,Select } from 'antd';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import Loading from '../../../loading/loading.js';
 import { 
   productTypeAction,
   ptTypes
 } from '../ducks/productType';
+import { deleteProductTypeSuccess } from '../ducks/productType/action';
 const EditableContext = React.createContext();
 
 const EditableRow = ({ form, index, ...props }) => (
@@ -103,6 +105,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     fetchGetAllProductType : () => {
       dispatch(productTypeAction.fetchGetListProductType());
+    },
+    deleteProductType : (listId) => {
+      dispatch(productTypeAction.deleteProductType(listId));
     }
 });
 class AddProductType extends React.Component {
@@ -132,14 +137,24 @@ class AddProductType extends React.Component {
     const { fetchGetAllProductType } = this.props;
     fetchGetAllProductType();
   }
+  componentWillReceiveProps(nextProps) {
+      this.setState({
+        dataSource : nextProps.listProductType
+      })
+  }
   onSelectChange = selectedRowKeys => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys });
   };
 
   handleDelete = key => {
-    const dataSource = [...this.state.dataSource];
-    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+    const selectedRowKeys = [...this.state.selectedRowKeys];
+    const listId = selectedRowKeys.map(item =>{
+      return Number(this.props.listProductType.find(data => data.key === item)['id'])
+    });
+    const {deleteProductType} = this.props;
+    console.log(listId);
+    deleteProductType(listId);
   };
 
   handleAdd = () => {
@@ -161,7 +176,6 @@ class AddProductType extends React.Component {
     const { dataSource } = this.state;
     let index = dataSource.findIndex(item => item.key === data.key);
     dataSource[index] = data;
-    console.log(dataSource);
     this.setState({
       dataSource : dataSource
     })
@@ -169,7 +183,6 @@ class AddProductType extends React.Component {
   saveProductType = () =>{
      let {createProductType} = this.props;
      let {dataSource , selectedRowKeys } = this.state;
-     console.log(this.state);
      let productTypeData = {
         dataSource : dataSource,
         selectedRowKeys : selectedRowKeys
@@ -177,13 +190,13 @@ class AddProductType extends React.Component {
      createProductType(productTypeData);
   }
   render() {
-    const {selectedRowKeys } = this.state;
+    const {isFetching} = this.props;
+    const {selectedRowKeys,dataSource } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
-    const { dataSource } = this.state;
     const components = {
       body: {
         row: EditableFormRow,
@@ -207,6 +220,7 @@ class AddProductType extends React.Component {
     });
     return (
       <div>
+         <Loading  isLoading ={ isFetching }/>
         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
           Add a row
         </Button>
