@@ -75,14 +75,14 @@ class AddColor extends React.Component {
         state.error.duplicate.isDuplicate = true,
         state.hexColor = color.hexColor,
         state)
-      );
+      )
     } else {
       this.setState(state => (
         state.error.duplicate.isDuplicate = false,
         state.hexColor = color.hex,
         state.hexColor = color.hex,
         state)
-      );
+      )
     }
   };
   handleOk = async(e) => {
@@ -102,13 +102,13 @@ class AddColor extends React.Component {
       visible : false
     })
     }
-  };
+  }
 
   handleCancel = () => {
     this.setState({
       visible: false,
     });
-  };
+  }
   handleInput = e =>{
     let nameColor = e.target.value;
     let isDuplicate = this.props.listColors.some(color => {
@@ -126,14 +126,14 @@ class AddColor extends React.Component {
         state.error.duplicate.isDuplicate = true,
         state.nameColor = nameColor,
         state)
-      );
+      )
     } else {
       this.setState(state => (
         state.error.blank.isBlank = false,
         state.error.duplicate.isDuplicate = false,
         state.nameColor = nameColor,
         state)
-      );
+      )
     }
   }
   getColumnSearchProps = dataIndex => ({

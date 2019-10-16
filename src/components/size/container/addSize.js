@@ -1,5 +1,9 @@
 import { Table, Input, Button, Radio , Form,Select } from 'antd';
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { 
+  productTypeAction
+} from '../../product/productType/ducks/productType';
 const EditableContext = React.createContext();
 const { Option } = Select;
 const EditableRow = ({ form, index, ...props }) => (
@@ -14,23 +18,29 @@ class EditableCell extends React.Component {
     constructor(props){
         super(props);
         this.state =({
+            productType :'',
             editing :false
         })
     }
   getInput = () => {
+    console.log(this.props);
+    let option = this.props.listProductType.map(item => <Option value ={item.name}>{item.name}</Option>)
     if (this.props.inputType === 'select') {
-      return <Select onBlur={this.save}>
-           <Option value="jack">Jack</Option>
-           <Option value="lucy">Lucy</Option>
-           <Option value="tom">Tom</Option>
+      return <Select ref={node => (this.input = node)} onBlur={this.save} onChange = {this.change}>
+          {option}
       </Select>;
     }
-    return<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />;
+    if(this.props.productType !== 'Closure' && this.props.productType !== 'Frontal') {
+       if(this.props.dataIndex === 'sizefrontal'){
+          return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} disabled ="true"/>;
+       }
+    }
+    return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />;
   };
   toggleEdit = () => {
-      console.log(this.select);
+    console.log(this.state)
     const editing = !this.state.editing;
-    this.setState({ editing }, () => {
+    this.setState({ editing}, () => {
       if (editing) {
         if(this.input !== undefined){
             this.input.focus();
@@ -38,14 +48,21 @@ class EditableCell extends React.Component {
       }
     });
   };
-
+  change = e =>{
+     this.setState({
+       productType : e
+     })
+  }
   save = e => {
-    const { record, handleSave } = this.props;
+    const { record, handleSave , productType} = this.props;
+    let {editing} = this.state;
     this.form.validateFields((error, values) => {
       if (error && error[e.currentTarget.id]) {
         return;
       }
       this.toggleEdit();
+      record.productType = productType;
+      record.editing = editing;
       handleSave({ ...record, ...values });
     });
   };
@@ -98,8 +115,19 @@ class EditableCell extends React.Component {
     );
   }
 }
-
-class EditableTable extends Component {
+const mapStateToProps = (state) => {
+  const {listProductType , isFetching } = state.productTypeReducer.producttype;
+  return {
+    listProductType : listProductType,
+    isFetching : isFetching
+  };
+};
+const mapDispatchToProps = (dispatch) => ({
+  fetchGetAllProductType : () => {
+    dispatch(productTypeAction.fetchGetListProductType());
+  },
+});
+class Size extends Component {
   constructor(props) {
     super(props);
     this.columns = [
@@ -125,37 +153,35 @@ class EditableTable extends Component {
 
     this.state = {
       selectedRowKeys: [],
-      dataSource: [
-        {
-          key: '0',
-          producttype: 'Edward King 0',
-          length: '32',
-          sizefrontal: 'London, Park Lane no. 0',
-        },
-        {
-          key: '1',
-          producttype: 'Edward King 1',
-          length: '32',
-          sizefrontal: 'London, Park Lane no. 1',
-        },
-      ],
+      listProductType : [],
+      dataSource: [],
       type : 'Cm',
       count: 2,
+      productType :''
     };
   }
-
+  componentDidMount(){
+    let {fetchGetAllProductType} = this.props;
+       fetchGetAllProductType();
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      listProductType : nextProps.listProductType
+    })
+  }
   handleDelete = key => {
     const dataSource = [...this.state.dataSource];
     this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
   };
 
   handleAdd = () => {
+    console.log(this.state);
     const { count, dataSource } = this.state;
     const newData = {
       key: count,
-      name: `Edward King ${count}`,
-      age: 32,
-      address: `London, Park Lane no. ${count}`,
+      producttype: 'pls enter data',
+      length: 32,
+      sizefrontal: 'pls enter data',
     };
     this.setState({
       dataSource: [...dataSource, newData],
@@ -164,6 +190,7 @@ class EditableTable extends Component {
   };
 
   handleSave = row => {
+    console.log(row);
     const newData = [...this.state.dataSource];
     const index = newData.findIndex(item => row.key === item.key);
     const item = newData[index];
@@ -171,7 +198,7 @@ class EditableTable extends Component {
       ...item,
       ...row,
     });
-    this.setState({ dataSource: newData });
+    this.setState({ dataSource: newData,productType : row.producttype });
   };
   onSelectChange = selectedRowKeys => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -201,10 +228,12 @@ class EditableTable extends Component {
         ...col,
         onCell: record => ({
           record,
-          inputType:col.dataIndex === 'producttype' ? 'select' : 'text',
+          inputType :col.dataIndex === 'producttype' ? 'select' : 'text',
           editable: col.editable,
           dataIndex: col.dataIndex,
           title: col.title,
+          listProductType : this.state.listProductType,
+          productType : this.state.productType,
           handleSave: this.handleSave,
         }),
       };
@@ -236,4 +265,7 @@ class EditableTable extends Component {
     );
   }
 }
-export default EditableTable;
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps,
+)(Size);
