@@ -1,6 +1,8 @@
 import { Table, Input, Button, Radio , Form,Select } from 'antd';
+import { Pagination } from 'antd';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import * as Constants from '../../../commom/Constants.js'
 import { 
   productTypeAction
 } from '../../product/productType/ducks/productType';
@@ -157,7 +159,9 @@ class Size extends Component {
       dataSource: [],
       type : 'Cm',
       count: 2,
-      productType :''
+      productType :'',
+      curentPage : 1,
+      pageSize : Constants.PAGE_SIZE
     };
   }
   componentDidMount(){
@@ -206,6 +210,7 @@ class Size extends Component {
   };
 
   render() {
+    let pagination =<Pagination defaultCurrent={this.state.curentPage} defaultPageSize={this.state.pageSize}></Pagination>
     const {type} = this.state;
     const {selectedRowKeys } = this.state;
     const rowSelection = {
@@ -260,7 +265,10 @@ class Size extends Component {
           bordered
           dataSource={dataSource}
           columns={columns}
-        />
+          pagination = {false}/>
+        <div className="float-right">
+            {pagination}
+        </div>
       </div>
     );
   }
