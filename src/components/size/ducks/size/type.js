@@ -1,0 +1,7 @@
+export const FETCH_LIST_SIZE = 'prt/FETCH_LIST_PRODUCTTYPE';
+export const FETCH_LIST_SIZE_SUCCESS = 'prt/FETCH_LIST_PRODUCTTYPE_SUCCESS';
+export const ADD_SIZE = 'prt/ADD_SIZE';
+export const ADD_SIZE_SUCCESS = 'prt/ADD_SIZE_SUCCESS';
+export const DELETE_SIZE = 'prt/DELETE_SIZE';
+export const DELETE_SIZE_SUCCESS = 'prt/DELETE_SIZE_SUCCESS';
+export const UPDATE_SIZE ='prt/UPDATE_SIZE';

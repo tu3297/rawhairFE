@@ -125,8 +125,8 @@ const mapStateToProps = (state) => {
   };
 };
 const mapDispatchToProps = (dispatch) => ({
-  fetchGetAllProductType : () => {
-    dispatch(productTypeAction.fetchGetListProductType());
+  fetchGetAllSize : () => {
+    dispatch(productTypeAction.fetchGetAllSize());
   },
 });
 class Size extends Component {
@@ -158,19 +158,19 @@ class Size extends Component {
       listProductType : [],
       dataSource: [],
       type : 'Cm',
-      count: 2,
+      count: 0,
       productType :'',
       curentPage : 1,
       pageSize : Constants.PAGE_SIZE
     };
   }
   componentDidMount(){
-    let {fetchGetAllProductType} = this.props;
-       fetchGetAllProductType();
+    let {fetchGetAllSize} = this.props;
+       fetchGetAllSize();
   }
   componentWillReceiveProps(nextProps) {
     this.setState({
-      listProductType : nextProps.listProductType
+      listSize : nextProps.listSize
     })
   }
   handleDelete = key => {
@@ -193,17 +193,22 @@ class Size extends Component {
     });
   };
 
-  handleSave = row => {
-    console.log(row);
-    const newData = [...this.state.dataSource];
-    const index = newData.findIndex(item => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, {
-      ...item,
-      ...row,
-    });
-    this.setState({ dataSource: newData,productType : row.producttype });
+  handleSave = data => {
+    const { dataSource } = this.state;
+    let index = dataSource.findIndex(item => item.key === data.key);
+    dataSource[index] = data;
+    this.setState({
+      dataSource : dataSource
+    })
   };
+  saveSize = () => {
+    console.log(this.state);
+    let {dataSource , selectedRowKeys } = this.state;
+    let sizeData = {
+      dataSource : dataSource,
+      selectedRowKeys : selectedRowKeys
+   }
+  }
   onSelectChange = selectedRowKeys => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys });
@@ -252,7 +257,7 @@ class Size extends Component {
         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
           Add a row
         </Button>
-        <Button className="ml-2" onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+        <Button className="ml-2" onClick={this.saveSize} type="primary" style={{ marginBottom: 16 }}>
            Save
         </Button>
         <Button className="ml-2" onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
