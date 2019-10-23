@@ -4,8 +4,11 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import * as Constants from '../../../commom/Constants.js'
 import { 
+  sizeAction
+} from '../../size/ducks/size';
+import {
   productTypeAction
-} from '../../product/productType/ducks/productType';
+} from '../../product/productType/ducks/productType'
 const EditableContext = React.createContext();
 const { Option } = Select;
 const EditableRow = ({ form, index, ...props }) => (
@@ -125,8 +128,11 @@ const mapStateToProps = (state) => {
   };
 };
 const mapDispatchToProps = (dispatch) => ({
-  fetchGetAllSize : () => {
-    dispatch(productTypeAction.fetchGetAllSize());
+  fetchGetAllSize : (data) => {
+    dispatch(sizeAction.fetchGetListSize(data));
+  },
+  fetchGetAllProductType : () => {
+    dispatch(productTypeAction.fetchGetListProductType());
   },
 });
 class Size extends Component {
@@ -165,12 +171,18 @@ class Size extends Component {
     };
   }
   componentDidMount(){
-    let {fetchGetAllSize} = this.props;
-       fetchGetAllSize();
+    let {fetchGetAllSize , fetchGetAllProductType} = this.props;
+    let sizeData ={
+      curentPage : this.state.curentPage,
+      pageSize : this.state.pageSize
+    }
+    fetchGetAllProductType();
+    fetchGetAllSize(sizeData);
   }
   componentWillReceiveProps(nextProps) {
     this.setState({
-      listSize : nextProps.listSize
+      listSize : nextProps.listSize,
+      listProductType : nextProps.listProductType
     })
   }
   handleDelete = key => {
@@ -217,7 +229,7 @@ class Size extends Component {
   render() {
     let pagination =<Pagination defaultCurrent={this.state.curentPage} defaultPageSize={this.state.pageSize}></Pagination>
     const {type} = this.state;
-    const {selectedRowKeys } = this.state;
+    const { selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
