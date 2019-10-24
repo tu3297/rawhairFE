@@ -82,7 +82,7 @@ class EditableCell extends React.Component {
           rules: [
             {
               required: true,
-              message: `${title} is required.`,
+              message: 'fail',
             },
           ],
           initialValue: record[dataIndex],
@@ -138,27 +138,6 @@ const mapDispatchToProps = (dispatch) => ({
 class Size extends Component {
   constructor(props) {
     super(props);
-    this.columns = [
-      {
-        title: 'Product Type',
-        dataIndex: 'producttype',
-        width: '50%',
-        editable: true,
-      },
-      {
-        title: 'Length',
-        dataIndex: 'length',
-        width: '20%',
-        editable: true
-      },
-      {
-        title: 'Size Frontal',
-        dataIndex: 'sizefrontal',
-        width: '20%',
-        editable: true
-      },
-    ];
-
     this.state = {
       selectedRowKeys: [],
       listProductType : [],
@@ -167,6 +146,7 @@ class Size extends Component {
       count: 0,
       productType :'',
       curentPage : 1,
+      filterProductType : [],
       pageSize : Constants.PAGE_SIZE
     };
   }
@@ -174,10 +154,11 @@ class Size extends Component {
     let {fetchGetAllSize , fetchGetAllProductType} = this.props;
     let sizeData ={
       curentPage : this.state.curentPage,
-      pageSize : this.state.pageSize
+      pageSize : this.state.pageSize,
+      productType : this.state.filterProductType
     }
     fetchGetAllProductType();
-    fetchGetAllSize(sizeData);
+    //fetchGetAllSize(sizeData);
   }
   componentWillReceiveProps(nextProps) {
     this.setState({
@@ -225,8 +206,39 @@ class Size extends Component {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys });
   };
-
+  handleTable = (pagination,filters,sorter) =>{
+        let {fetchGetAllSize} = this.props;
+        let sizeData ={
+          curentPage : this.state.curentPage,
+          pageSize : this.state.pageSize,
+          productType : filters.producttype
+        }
+        fetchGetAllSize(sizeData);
+  }
   render() {
+    const filter = this.state.listProductType.map(item => ({text :item.name,value :item.id}))
+    console.log(filter);
+    const columns1 = [
+      {
+        title: 'Product Type',
+        dataIndex: 'producttype',
+        filters : filter,
+        width: '50%',
+        editable: true,
+      },
+      {
+        title: 'Length',
+        dataIndex: 'length',
+        width: '20%',
+        editable: true
+      },
+      {
+        title: 'Size Frontal',
+        dataIndex: 'sizefrontal',
+        width: '20%',
+        editable: true
+      },
+    ];
     let pagination =<Pagination defaultCurrent={this.state.curentPage} defaultPageSize={this.state.pageSize}></Pagination>
     const {type} = this.state;
     const { selectedRowKeys } = this.state;
@@ -242,7 +254,7 @@ class Size extends Component {
         cell: EditableCell,
       },
     };
-    const columns = this.columns.map(col => {
+    const columns = columns1.map(col => {
       if (!col.editable) {
         return col;
       }
@@ -254,6 +266,7 @@ class Size extends Component {
           editable: col.editable,
           dataIndex: col.dataIndex,
           title: col.title,
+          filters : col.filters,
           listProductType : this.state.listProductType,
           productType : this.state.productType,
           handleSave: this.handleSave,
@@ -282,7 +295,8 @@ class Size extends Component {
           bordered
           dataSource={dataSource}
           columns={columns}
-          pagination = {false}/>
+          pagination = {false}
+          onChange ={this.handleTable}/>
         <div className="float-right">
             {pagination}
         </div>
