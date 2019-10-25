@@ -29,7 +29,7 @@ class EditableCell extends React.Component {
     }
   getInput = () => {
     console.log(this.props);
-    let option = this.props.listProductType.map(item => <Option value ={item.name}>{item.name}</Option>)
+    let option = this.props.listProductType.map(item => <Option value = {item.id} >{item.name}</Option>)
     if (this.props.inputType === 'select') {
       return <Select ref={node => (this.input = node)} onBlur={this.save} onChange = {this.change}>
           {option}
