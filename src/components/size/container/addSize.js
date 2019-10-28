@@ -23,7 +23,8 @@ class EditableCell extends React.Component {
     constructor(props){
         super(props);
         this.state =({
-            productType :'',
+            productTypeId :'',
+            productTypeName :'',
             editing :false
         })
     }
@@ -43,7 +44,6 @@ class EditableCell extends React.Component {
     return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />;
   };
   toggleEdit = () => {
-    console.log(this.state)
     const editing = !this.state.editing;
     this.setState({ editing}, () => {
       if (editing) {
@@ -54,21 +54,27 @@ class EditableCell extends React.Component {
     });
   };
   change = e =>{
+     let productType = this.props.listProductType.filter(item => item.id === e);
      this.setState({
-       productType : e
+      productTypeId : e,
+      productTypeName: productType[0].name
      })
   }
   save = e => {
-    const { record, handleSave , productType} = this.props;
-    let {editing} = this.state;
+    console.log(this.state)
+    const { record, handleSave } = this.props;
+    let {editing , productTypeId , productTypeName} = this.state;
     this.form.validateFields((error, values) => {
       if (error && error[e.currentTarget.id]) {
         return;
       }
       this.toggleEdit();
-      record.productType = productType;
+      if(typeof e === 'string' && e !== 'pls enter data'){
+         record.producttype = productTypeName;
+         record.productTypeId = productTypeId;
+      }
       record.editing = editing;
-      handleSave({ ...record, ...values });
+      handleSave({ ...record});
     });
   };
 
@@ -191,7 +197,8 @@ class Size extends Component {
     let index = dataSource.findIndex(item => item.key === data.key);
     dataSource[index] = data;
     this.setState({
-      dataSource : dataSource
+      dataSource : dataSource,
+      producttype : data.producttype
     })
   };
   saveSize = () => {
@@ -268,7 +275,7 @@ class Size extends Component {
           title: col.title,
           filters : col.filters,
           listProductType : this.state.listProductType,
-          productType : this.state.productType,
+          productType : this.state.producttype,
           handleSave: this.handleSave,
         }),
       };
