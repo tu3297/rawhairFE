@@ -28,28 +28,31 @@ class EditableCell extends React.Component {
             editing :false
         })
     }
-  getInput = () => {
-    console.log(this.props);
+  getInput = (e) => {
     let option = this.props.listProductType.map(item => <Option value = {item.id} >{item.name}</Option>)
     if (this.props.inputType === 'select') {
-      return <Select ref={node => (this.input = node)} onBlur={this.save} onChange = {this.change}>
+      return <Select onBlur={this.save} onChange = {this.change}>
           {option}
       </Select>;
     }
-    if(this.props.productType !== 'Closure' && this.props.productType !== 'Frontal') {
+    if(e.producttype !== 'Closure' && e.producttype !== 'Frontal') {
        if(this.props.dataIndex === 'sizefrontal'){
           return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} disabled ="true"/>;
        }
     }
-    return <Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />;
+    if (this.props.dataIndex === 'length') return <Input ref={node => (this.inputLength = node)} onPressEnter={this.save} onBlur={this.save} />;
+    else return <Input ref={node => (this.inputFrontal = node)} onPressEnter={this.save} onBlur={this.save} />;
   };
   toggleEdit = () => {
     const editing = !this.state.editing;
     this.setState({ editing}, () => {
       if (editing) {
-        if(this.input !== undefined){
-            this.input.focus();
+        if(this.inputLength !== undefined){
+            this.inputLength.focus();
         }
+        if(this.inputFrontal !== undefined){
+          this.inputFrontal.focus();
+      }
       }
     });
   };
@@ -61,7 +64,6 @@ class EditableCell extends React.Component {
      })
   }
   save = e => {
-    console.log(this.state)
     const { record, handleSave } = this.props;
     let {editing , productTypeId , productTypeName} = this.state;
     this.form.validateFields((error, values) => {
@@ -72,6 +74,9 @@ class EditableCell extends React.Component {
       if(typeof e === 'string' && e !== 'pls enter data'){
          record.producttype = productTypeName;
          record.productTypeId = productTypeId;
+      } else {
+       if(this.inputLength !== undefined) record.length =  this.inputLength.state.value;
+       if(this.inputFrontal !== undefined) record.sizefrontal = this.inputFrontal.state.value;
       }
       record.editing = editing;
       handleSave({ ...record});
@@ -92,7 +97,7 @@ class EditableCell extends React.Component {
             },
           ],
           initialValue: record[dataIndex],
-        })(this.getInput())}
+        })(this.getInput(record))}
       </Form.Item>
     ) : (
       <div
@@ -140,6 +145,9 @@ const mapDispatchToProps = (dispatch) => ({
   fetchGetAllProductType : () => {
     dispatch(productTypeAction.fetchGetListProductType());
   },
+  fetchAddSize : (data) => {
+    dispatch(sizeAction.addSize(data));
+  }
 });
 class Size extends Component {
   constructor(props) {
@@ -202,12 +210,13 @@ class Size extends Component {
     })
   };
   saveSize = () => {
-    console.log(this.state);
+    let {fetchAddSize} = this.props;
     let {dataSource , selectedRowKeys } = this.state;
     let sizeData = {
       dataSource : dataSource,
       selectedRowKeys : selectedRowKeys
    }
+   fetchAddSize(sizeData);
   }
   onSelectChange = selectedRowKeys => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -287,7 +296,7 @@ class Size extends Component {
           <Radio.Button value="Inch">Inch</Radio.Button>
         </Radio.Group>
         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-          Add a row
+           Add a row
         </Button>
         <Button className="ml-2" onClick={this.saveSize} type="primary" style={{ marginBottom: 16 }}>
            Save
@@ -296,9 +305,9 @@ class Size extends Component {
            Delete
         </Button>
         <Table
-         rowSelection={rowSelection} 
-          components={components}
-          rowClassName={() => 'editable-row'}
+         rowSelection = {rowSelection} 
+          components = {components}
+          rowClassName = {() => 'editable-row'}
           bordered
           dataSource={dataSource}
           columns={columns}
@@ -312,6 +321,6 @@ class Size extends Component {
   }
 }
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   mapDispatchToProps,
 )(Size);

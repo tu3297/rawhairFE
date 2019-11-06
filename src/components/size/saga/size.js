@@ -18,3 +18,8 @@ import {
     const response = yield call(fetchListSizeApi,action);
     yield put(sizeAction.fetchGetListSizeSuccess(response));
   }
+  export function* addSize(action) {
+    const response = yield call(fetchaddSizeApi,action);
+    const responseList = yield call(fetchListSizeApi);
+    yield put(sizeAction.fetchGetListSizeSuccess(responseList));
+  }
