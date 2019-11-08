@@ -153,7 +153,6 @@ class AddProductType extends React.Component {
       return Number(this.props.listProductType.find(data => data.key === item)['id'])
     });
     const {deleteProductType} = this.props;
-    console.log(listId);
     deleteProductType(listId);
   };
 

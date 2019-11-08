@@ -172,7 +172,7 @@ class Size extends Component {
       productType : this.state.filterProductType
     }
     fetchGetAllProductType();
-    //fetchGetAllSize(sizeData);
+    fetchGetAllSize(sizeData);
   }
   componentWillReceiveProps(nextProps) {
     this.setState({
@@ -189,6 +189,7 @@ class Size extends Component {
     console.log(this.state);
     const { count, dataSource } = this.state;
     const newData = {
+      id : '',
       key: count,
       producttype: 'pls enter data',
       length: 32,
@@ -216,6 +217,7 @@ class Size extends Component {
       dataSource : dataSource,
       selectedRowKeys : selectedRowKeys
    }
+   console.log(sizeData);
    fetchAddSize(sizeData);
   }
   onSelectChange = selectedRowKeys => {
@@ -233,7 +235,6 @@ class Size extends Component {
   }
   render() {
     const filter = this.state.listProductType.map(item => ({text :item.name,value :item.id}))
-    console.log(filter);
     const columns1 = [
       {
         title: 'Product Type',
