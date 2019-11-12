@@ -3,7 +3,7 @@ const initState = {
     listSize: [],
     isFetching: false,
   }
-export default function productType(state = initState,action){
+export default function size(state = initState,action){
    switch(action.type){
     case types.FETCH_LIST_SIZE :{
          return {

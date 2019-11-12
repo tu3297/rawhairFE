@@ -3,6 +3,7 @@ import { Pagination } from 'antd';
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import * as Constants from '../../../commom/Constants.js'
+import Loading from '../../loading/loading';
 import { 
   sizeAction
 } from '../../size/ducks/size';
@@ -132,10 +133,13 @@ class EditableCell extends React.Component {
   }
 }
 const mapStateToProps = (state) => {
-  const {listProductType , isFetching } = state.productTypeReducer.producttype;
+  const {listProductType} = state.productTypeReducer.producttype;
+  const {listSize} = state.sizeReducer.size;
+  let isFetching = state.productTypeReducer.producttype.isFetching && state.sizeReducer.size.isFetching
   return {
     listProductType : listProductType,
-    isFetching : isFetching
+    isFetching : isFetching,
+    listSize : listSize
   };
 };
 const mapDispatchToProps = (dispatch) => ({
@@ -147,6 +151,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   fetchAddSize : (data) => {
     dispatch(sizeAction.addSize(data));
+  },
+  deleteSize : (listId) => {
+    dispatch(sizeAction.deleteSize(listId));
   }
 });
 class Size extends Component {
@@ -161,7 +168,8 @@ class Size extends Component {
       productType :'',
       curentPage : 1,
       filterProductType : [],
-      pageSize : Constants.PAGE_SIZE
+      pageSize : Constants.PAGE_SIZE,
+      total : 0,
     };
   }
   componentDidMount(){
@@ -176,8 +184,9 @@ class Size extends Component {
   }
   componentWillReceiveProps(nextProps) {
     this.setState({
-      listSize : nextProps.listSize,
-      listProductType : nextProps.listProductType
+      dataSource : nextProps.listSize.listSize,
+      total : nextProps.listSize.totalElemt,
+      listProductType : nextProps.listProductType,
     })
   }
   handleDelete = key => {
@@ -186,7 +195,6 @@ class Size extends Component {
   };
 
   handleAdd = () => {
-    console.log(this.state);
     const { count, dataSource } = this.state;
     const newData = {
       id : '',
@@ -213,12 +221,18 @@ class Size extends Component {
   saveSize = () => {
     let {fetchAddSize} = this.props;
     let {dataSource , selectedRowKeys } = this.state;
-    let sizeData = {
-      dataSource : dataSource,
-      selectedRowKeys : selectedRowKeys
+    let data = {
+        sizeData : {
+            dataSource : dataSource,
+            selectedRowKeys : selectedRowKeys
+        },
+        getList : {
+                  curentPage :this.state.curentPage,
+                  pageSize : this.state.pageSize,
+                  productType : this.state.filterProductType
+        }
    }
-   console.log(sizeData);
-   fetchAddSize(sizeData);
+   fetchAddSize(data);
   }
   onSelectChange = selectedRowKeys => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -226,6 +240,9 @@ class Size extends Component {
   };
   handleTable = (pagination,filters,sorter) =>{
         let {fetchGetAllSize} = this.props;
+        this.setState({
+          filterProductType : filters.producttype
+        })
         let sizeData ={
           curentPage : this.state.curentPage,
           pageSize : this.state.pageSize,
@@ -233,7 +250,36 @@ class Size extends Component {
         }
         fetchGetAllSize(sizeData);
   }
+  onPageChange = (page,pageSize) => {
+    let {fetchGetAllSize} = this.props;
+    this.setState({
+      curentPage : page
+    })
+    let sizeData ={
+      curentPage :page,
+      pageSize : pageSize,
+      productType : this.state.filterProductType
+    }
+    fetchGetAllSize(sizeData);
+  }
+  handleDelete = key => {
+    const selectedRowKeys = [...this.state.selectedRowKeys];
+    const listId = selectedRowKeys.map(item =>{
+      return Number(this.props.listSize.listSize.find(data => data.key === item)['id'])
+    });
+    const {deleteSize} = this.props;
+    let sizeData = {
+       getList : {
+              curentPage :this.state.curentPage,
+              pageSize : this.state.pageSize,
+              productType : this.state.filterProductType
+       },
+      listId : listId
+    }
+    deleteSize(sizeData);
+  };
   render() {
+    const { isFetching } = this.props;
     const filter = this.state.listProductType.map(item => ({text :item.name,value :item.id}))
     const columns1 = [
       {
@@ -256,7 +302,10 @@ class Size extends Component {
         editable: true
       },
     ];
-    let pagination =<Pagination defaultCurrent={this.state.curentPage} defaultPageSize={this.state.pageSize}></Pagination>
+    let pagination =<Pagination defaultCurrent={this.state.curentPage} defaultPageSize={this.state.pageSize} 
+                     total ={this.state.total}
+                     onChange={this.onPageChange}>
+                     </Pagination>
     const {type} = this.state;
     const { selectedRowKeys } = this.state;
     const rowSelection = {
@@ -292,6 +341,7 @@ class Size extends Component {
     });
     return (
       <div>
+         <Loading  isLoading ={ isFetching }/>
        <Radio.Group value ={type} className ="float-right">
           <Radio.Button value="Cm">Cm</Radio.Button>
           <Radio.Button value="Inch">Inch</Radio.Button>
@@ -302,7 +352,7 @@ class Size extends Component {
         <Button className="ml-2" onClick={this.saveSize} type="primary" style={{ marginBottom: 16 }}>
            Save
         </Button>
-        <Button className="ml-2" onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+        <Button className="ml-2" onClick={this.handleDelete} type="primary" style={{ marginBottom: 16 }}>
            Delete
         </Button>
         <Table

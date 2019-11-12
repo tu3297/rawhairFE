@@ -16,9 +16,9 @@ export const addSizeSuccess = (data) => ({
         type : types.ADD_SIZE_SUCCESS,
         payload: data
 });
-export const deleteSize = (productId) => ({
+export const deleteSize = (sizeId) => ({
         type : types.DELETE_SIZE,
-        payload: productId
+        payload: sizeId
 });
 export const deleteSizeSuccess = (data) => ({
         type : types.DELETE_SIZE_SUCCESS,

@@ -5,6 +5,7 @@ import AddColor from '../color/container/addColor.js';
 import Size from '../size/container/addSize.js';
 import ProductType from '../product/productType/container/addProductType';
 import ProductTypeSize from '../product/productTypeSize/addProductTypeSize.js';
+import ListProduct from '../product/components/ListProduct'
 const subMenu = [
     {
       id: 0,
@@ -55,6 +56,11 @@ const subMenu = [
       id: 9,
       text: 'Menu',
       link: '/menu'
+    },
+    {
+      id: 10,
+      text: 'Product',
+      link: '/product'
     }
   ];
 class AdminManager extends Component {
@@ -78,6 +84,7 @@ class AdminManager extends Component {
                 <Route path={`${match.path}/size`} component={props => <Size  {...props}/>} />
                 <Route path={`${match.path}/pt`} component={props => <ProductType  {...props}/>} />
                 <Route path={`${match.path}/prt`} component={props => <ProductTypeSize {...props}/>} />
+                <Route path={`${match.path}/product`} component={props => <ListProduct {...props}/>} />
               </Switch>
           </div>
           </div>
