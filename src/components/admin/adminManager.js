@@ -6,6 +6,7 @@ import Size from '../size/container/addSize.js';
 import ProductType from '../product/productType/container/addProductType';
 import ProductTypeSize from '../product/productTypeSize/addProductTypeSize.js';
 import ListProduct from '../product/components/ListProduct'
+import AddProduct from '../product/components/AddProduct'
 const subMenu = [
     {
       id: 0,
@@ -84,7 +85,7 @@ class AdminManager extends Component {
                 <Route path={`${match.path}/size`} component={props => <Size  {...props}/>} />
                 <Route path={`${match.path}/pt`} component={props => <ProductType  {...props}/>} />
                 <Route path={`${match.path}/prt`} component={props => <ProductTypeSize {...props}/>} />
-                <Route path={`${match.path}/product`} component={props => <ListProduct {...props}/>} />
+                <Route path={`${match.path}/product`} component={props => <AddProduct {...props}/>} />
               </Switch>
           </div>
           </div>
