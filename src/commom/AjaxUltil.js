@@ -1,15 +1,11 @@
 import querystring from 'query-string';
-import { actionChannel } from 'redux-saga/effects';
-
 const API_ENDPOINT = 'http://localhost:5000';
-
 function buildHeaders(headers){
   return {
     'Content-Type': 'application/json',
     ...headers,
   };
 }
-
 function request(props){
   const {
     url,
@@ -60,7 +56,6 @@ const Api = {
     })
   },
   post: (url, option) => {
-    console.log('get');
 		return request({
       url,
 			init: {
