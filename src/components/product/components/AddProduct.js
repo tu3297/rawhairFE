@@ -1,6 +1,10 @@
 import React,{ Component } from 'react';
 import { Upload, Icon, Modal,message } from 'antd';
 import { Select ,Input} from 'antd';
+import { connect } from 'react-redux';
+import {
+  productTypeAction
+} from '../../product/productType/ducks/productType'
 const { Option } = Select;
 function getBase64(img, callback) {
   return new Promise((resolve, reject) => {
@@ -22,6 +26,19 @@ function beforeUpload(file) {
     }
     return isJpgOrPng && isLt2M;
 }
+const mapStateToProps = (state) => {
+  const {listProductType,isFetching} = state.productTypeReducer.producttype;
+  console.log(state);
+  return {
+    listProductType : listProductType,
+    isFetching : isFetching,
+  };
+};
+const mapDispatchToProps = (dispatch) => ({
+  fetchGetAllProductType : () => {
+    dispatch(productTypeAction.fetchGetListProductType());
+  }
+});
 const fetch = window.fetch.bind(window);
 class AddProduct extends Component {
     constructor(props){
@@ -30,7 +47,10 @@ class AddProduct extends Component {
             loading: false,
             previewVisible: false,
             previewImage: '',
-            fileList : []
+            fileList : [],
+            isSelectProductType : false,
+            isClosureFrontal : false
+
         };
         this.uploaderProps = {
         name : "file",
@@ -40,6 +60,15 @@ class AddProduct extends Component {
         action : 'http://localhost:5000/upload',
         data : (file) => new FormData().append('file', file)
        }
+    }
+    componentDidMount(){
+      let { fetchGetAllProductType } = this.props;
+      fetchGetAllProductType();
+    }
+    componentWillReceiveProps(nextProps) {
+      this.setState({
+        listProductType : nextProps.listProductType,
+      })
     }
     handleChange = info => {
         if (info.file.status === "uploading") {
@@ -67,6 +96,7 @@ class AddProduct extends Component {
       handleCancel = () => this.setState({ previewVisible: false });
     render(){
         console.log('upload')
+        let dataProductType = (this.state.listProductType !==undefined ? this.state.listProductType : []).map(item => <Option value = {item.id} >{item.name}</Option>)
         const { previewVisible, previewImage, fileList } = this.state;
         const uploadButton = (
             <div>
@@ -90,31 +120,26 @@ class AddProduct extends Component {
       </div>
         <div className="row">
         <Select
-              showSearch
               style={{ width: 200 }}
               placeholder="Select product type"
               optionFilterProp="children">
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-           <Option value="tom">Tom</Option>
+           {dataProductType}
       </Select>
       </div>
-      <div className ="row">
+        <div className ="row">
       <Select
-              showSearch
-              style={{ width: 200 }}
-              placeholder="Select color"
-              optionFilterProp="children">
+        disabled ={!this.state.isSelectProductType}
+          style={{ width: 200 }}
+          placeholder="Select size"
+          optionFilterProp="children">
             <Option value="jack">Jack</Option>
             <Option value="lucy">Lucy</Option>
            <Option value="tom">Tom</Option>
       </Select>
-        </div>
-        <div className ="row">
       <Select
-          showSearch
+          disabled ={!this.state.isClosureFrontal}
           style={{ width: 200 }}
-          placeholder="Select size"
+          placeholder="Select size frontal or closure"
           optionFilterProp="children">
             <Option value="jack">Jack</Option>
             <Option value="lucy">Lucy</Option>
@@ -128,4 +153,7 @@ class AddProduct extends Component {
     }
 
 }
-export default AddProduct;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AddProduct);

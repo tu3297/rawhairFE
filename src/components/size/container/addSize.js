@@ -235,7 +235,6 @@ class Size extends Component {
    fetchAddSize(data);
   }
   onSelectChange = selectedRowKeys => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys });
   };
   handleTable = (pagination,filters,sorter) =>{
