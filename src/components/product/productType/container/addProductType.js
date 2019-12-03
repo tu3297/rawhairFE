@@ -23,8 +23,6 @@ const EditableFormRow = Form.create()(EditableRow);
 class EditableCell extends React.Component {
   state = {
     editing: false,
-    colorName :'pls enter data',
-    colorId : ''
   };
 
   toggleEdit = () => {
@@ -55,10 +53,6 @@ class EditableCell extends React.Component {
   };
   change = e =>{
     let color = this.props.listColor.filter(item => item.colorId === e);
-    this.setState({
-     colorId : e,
-     colorName: color[0].colorName
-    })
  }
   save = e => {
     const { record, handleSave , listColor } = this.props;
@@ -68,8 +62,6 @@ class EditableCell extends React.Component {
       }
       this.toggleEdit();
       record.editing = this.state.editing;
-      record.color = this.state.colorName;
-      record.colorId = this.state.colorId;
       if(this.inputName !== undefined) record.name =  this.inputName.state.value;
       if(this.inputDes !== undefined) record.description = this.inputDes.state.value;
       handleSave({...record});
@@ -162,12 +154,12 @@ class AddProductType extends React.Component {
         dataIndex: 'description',
         editable :true
       },
-      {
-        title: 'Color',
-        dataIndex: 'color',
-        width: '20%',
-        editable: true
-      },
+      // {
+      //   title: 'Color',
+      //   dataIndex: 'color',
+      //   width: '20%',
+      //   editable: true
+      // },
     ];
 
     this.state = {
@@ -208,7 +200,6 @@ class AddProductType extends React.Component {
       key: count,
       name: 'Pls enter data',
       description: 'Pls enter data',
-      color : 'pls enter data',
       editing : false
     };
     this.setState({
