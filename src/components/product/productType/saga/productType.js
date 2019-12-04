@@ -1,9 +1,6 @@
 import { 
     put,
-    call , 
-    all,
-    takeLatest,
-    takeEvery,  
+    call
   } from 'redux-saga/effects';
   import { 
     ptTypes, 
@@ -12,7 +9,8 @@ import {
   import { 
     fetchListProductTypeApi,
     fetchaddProductTypeApi,
-    deleteProductTypeApi
+    deleteProductTypeApi,
+    updateProductTypeColor
   } from '../apis/productType';
   export function* createProductType(action){
     try{
@@ -39,3 +37,10 @@ import {
      console.log(error);
    }
   }
+   export function* updateProducttypeColor(action){
+     try{
+        const response = yield call(updateProductTypeColor,action.payload);
+     }catch(error){
+       console.log(error);
+     }
+   }

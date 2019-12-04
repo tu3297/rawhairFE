@@ -24,3 +24,11 @@ export const deleteProductTypeSuccess = (data) => ({
         type : types.DELETE_PRODUCTTYPE_SUCCESS,
         payload: data
 });
+export const updateProductTypeColor = (data) => ({
+        type : types.UPDATE_PRODUCTTYPE_COLOR,
+        payload : data
+});
+export const getAllProductTypeColor = (data) => ({
+        type : types.UPDATE_PRODUCTTYPE_COLOR,
+        payload : data
+});

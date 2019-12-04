@@ -16,3 +16,7 @@ export function deleteProductTypeApi(productTypeId){
   const deleteProductType = 'prt/deleteProductType';
   return api.post(deleteProductType,productTypeId);
 }
+export function updateProductTypeColor(data){
+  const updateProductTypeColor = 'prt/updateProductTypeColor';
+  return api.post(updateProductTypeColor,data);
+}

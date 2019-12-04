@@ -4,7 +4,6 @@ import colorReducer, { colorActions } from '../../../../color/ducks/color';
 import { Select ,Input,Checkbox, Table} from 'antd';
 import { productTypeAction } from '../../../../product/productType/ducks/productType';
 const mapStateToProps = (state) => {
-    console.log(state);
     return {
         listColor : state.colorReducer.color.listColor,
         listProductType : state.productTypeReducer.producttype.listProductType
@@ -16,6 +15,12 @@ const mapStateToProps = (state) => {
     },
     fetchGetAllColor : () => {
         dispatch(colorActions.fetchGetListColor());
+    },
+    updateProductTypeColor : (data) => {
+        dispatch(productTypeAction.updateProductTypeColor(data))
+    },
+    fethGetAllProductTypeColor : () => {
+        dispatch(productTypeAction.getAllProductTypeColor())
     }
   });
 class PTColor extends Component {
@@ -36,15 +41,22 @@ class PTColor extends Component {
           listProductType : nextProps.listProductType,
           listColor : nextProps.listColor
         })
+    }
+    onChange = (e) => {
+        let check = e.target.checked;
+        let dataId = e.target.value;
+        if(check === false ){
+        }
+        let { updateProductTypeColor} = this.props;
+        updateProductTypeColor(dataId);
       }
     render(){
-        console.log(this.state);
         let listProductType = this.state.listProductType !== undefined ? this.state.listProductType : [];
         listProductType.unshift({});
         let column = listProductType.map((item,index) => {
             if(index === 0){
                 return {
-                    title : 'Color / Product Type',
+                    title : <span>Color&#95;ProductType</span>,
                     dataIndex :'colorName',
                 }
             } else {
@@ -52,12 +64,11 @@ class PTColor extends Component {
                  title : item.name,
                  dataIndex :'',
                  render : (text,row,index) => {
-                     return <Checkbox></Checkbox>
-                }
-            }
+                     return <Checkbox value = {item.id + ',' + row.colorId} onChange = {this.onChange}></Checkbox>
+                 }
+              }
             }
         });
-        console.log(column);
         return <Table columns={column} dataSource={this.state.listColor} bordered />
     }
 }
