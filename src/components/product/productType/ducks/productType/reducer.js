@@ -4,6 +4,7 @@ const initState = {
     isFetching: false,
   }
 export default function productType(state = initState,action){
+  console.log(action);
    switch(action.type){
     case types.FETCH_LIST_PRODUCTTYPE :{
          return {
@@ -44,6 +45,19 @@ export default function productType(state = initState,action){
         color : action.color
       }
     }
+    case types.FETCH_LIST_PRODUCTTYPE_COLOR : {
+      return {
+        ...state,
+        isFetching : false
+      }
+    }
+    case types.FETCH_LIST_PRODUCTTYPE_COLOR_SUCCESS : {
+      return {
+        ...state,
+        isFetching :false,
+        listProductTypeColor : action.payload
+      }
+  }
     default: 
     return state
    }

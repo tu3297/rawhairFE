@@ -20,3 +20,7 @@ export function updateProductTypeColor(data){
   const updateProductTypeColor = 'prt/updateProductTypeColor';
   return api.post(updateProductTypeColor,data);
 }
+export function getAllProductTypeColorApi(){
+  const getAllProductTypeColor = 'prt/getAllProductTypeColor';
+  return api.get(getAllProductTypeColor,null);
+}

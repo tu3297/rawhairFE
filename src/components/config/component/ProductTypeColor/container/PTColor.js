@@ -4,9 +4,11 @@ import colorReducer, { colorActions } from '../../../../color/ducks/color';
 import { Select ,Input,Checkbox, Table} from 'antd';
 import { productTypeAction } from '../../../../product/productType/ducks/productType';
 const mapStateToProps = (state) => {
+    console.log(state);
     return {
         listColor : state.colorReducer.color.listColor,
-        listProductType : state.productTypeReducer.producttype.listProductType
+        listProductType : state.productTypeReducer.producttype.listProductType,
+        listProductTypeColor : state.productTypeReducer.producttype.listProductTypeColor
     }
   };
   const mapDispatchToProps = (dispatch) => ({
@@ -32,14 +34,16 @@ class PTColor extends Component {
         }
     }
     componentDidMount(){
-        let { fetchGetAllColor , fetchGetAllProductType} = this.props;
+        let { fetchGetAllColor , fetchGetAllProductType ,fethGetAllProductTypeColor} = this.props;
         fetchGetAllColor();
         fetchGetAllProductType();
+        fethGetAllProductTypeColor();
     }
     componentWillReceiveProps(nextProps) {
         this.setState({
           listProductType : nextProps.listProductType,
-          listColor : nextProps.listColor
+          listColor : nextProps.listColor,
+          listProductTypeColor : nextProps.listProductTypeColor
         })
     }
     onChange = (e) => {
@@ -49,7 +53,8 @@ class PTColor extends Component {
         }
         let { updateProductTypeColor} = this.props;
         updateProductTypeColor(dataId);
-      }
+    }
+    checkProductTypeColor = (productTypeId,colorId) => (this.state.listProductTypeColor!==undefined ? this.state.listProductTypeColor : []).filter(item => item.ptId === productTypeId && item.colorId === colorId).length;
     render(){
         let listProductType = this.state.listProductType !== undefined ? this.state.listProductType : [];
         listProductType.unshift({});
@@ -64,6 +69,7 @@ class PTColor extends Component {
                  title : item.name,
                  dataIndex :'',
                  render : (text,row,index) => {
+                     console.log(this.checkProductTypeColor(item.id,row.colorId))
                      return <Checkbox value = {item.id + ',' + row.colorId} onChange = {this.onChange}></Checkbox>
                  }
               }

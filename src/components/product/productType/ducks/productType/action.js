@@ -29,6 +29,10 @@ export const updateProductTypeColor = (data) => ({
         payload : data
 });
 export const getAllProductTypeColor = (data) => ({
-        type : types.UPDATE_PRODUCTTYPE_COLOR,
-        payload : data
+        type : types.FETCH_LIST_PRODUCTTYPE_COLOR,
+        payload : ['a']
+});
+export const fetchGetListProductTypeColorSuccess = (payload) => ({
+        type : types.FETCH_LIST_PRODUCTTYPE_COLOR_SUCCESS,
+        payload : payload
 });
