@@ -47,17 +47,21 @@ class PTColor extends Component {
         })
     }
     onChange = (e) => {
+        console.log(e);
         let check = e.target.checked;
-        let dataId = e.target.value;
-        if(check === false ){
-        }
+        let data = e.target.value;
+        data += ',' + check;
         let { updateProductTypeColor} = this.props;
-        updateProductTypeColor(dataId);
+        updateProductTypeColor(data);
     }
-    checkProductTypeColor = (productTypeId,colorId) => (this.state.listProductTypeColor!==undefined ? this.state.listProductTypeColor : []).filter(item => item.ptId === productTypeId && item.colorId === colorId).length;
+    checkProductTypeColor = (productTypeId,colorId) => (this.state.listProductTypeColor!==undefined ? this.state.listProductTypeColor : []).filter(item => item.ptId === productTypeId && item.colorId === colorId && item.useYn === 'Y').length;
     render(){
         let listProductType = this.state.listProductType !== undefined ? this.state.listProductType : [];
-        listProductType.unshift({});
+        if(listProductType.length !== 0 ){
+            if(JSON.stringify(listProductType[0]) !== JSON.stringify({})){
+               listProductType.unshift({});
+            }
+        }
         let column = listProductType.map((item,index) => {
             if(index === 0){
                 return {
@@ -69,8 +73,11 @@ class PTColor extends Component {
                  title : item.name,
                  dataIndex :'',
                  render : (text,row,index) => {
-                     console.log(this.checkProductTypeColor(item.id,row.colorId))
-                     return <Checkbox value = {item.id + ',' + row.colorId} onChange = {this.onChange}></Checkbox>
+                     if(this.checkProductTypeColor(item.id,row.colorId) !== 0){
+                        return <Checkbox value = {item.id + ',' + row.colorId} onChange = {this.onChange} checked></Checkbox>
+                     } else {
+                        return <Checkbox value = {item.id + ',' + row.colorId} onChange = {this.onChange}></Checkbox>
+                     }
                  }
               }
             }
