@@ -15,3 +15,7 @@ export function deleteColorApi(colorId){
   const deleteColor = 'color/deleteColor';
   return api.post(deleteColor,colorId);
 }
+export function fetchGetListColorOfProductType(productTypeId){
+  const getColorOfProductType = 'color/getColorOfProductType';
+  return api.get(getColorOfProductType,productTypeId);
+}

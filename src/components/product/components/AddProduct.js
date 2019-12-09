@@ -5,6 +5,12 @@ import { connect } from 'react-redux';
 import {
   productTypeAction
 } from '../../product/productType/ducks/productType'
+import {
+  colorAction, colorActions
+} from '../../color/ducks/color'
+import {
+  sizeAction
+} from '../../size/ducks/size'
 const { Option } = Select;
 function getBase64(img, callback) {
   return new Promise((resolve, reject) => {
@@ -27,7 +33,7 @@ function beforeUpload(file) {
     return isJpgOrPng && isLt2M;
 }
 const mapStateToProps = (state) => {
-  const {listProductType,isFetching} = state.productTypeReducer.producttype;
+  const { listProductType , isFetching } = state.productTypeReducer.producttype;
   console.log(state);
   return {
     listProductType : listProductType,
@@ -36,10 +42,16 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => ({
   fetchGetAllProductType : () => {
-    dispatch(productTypeAction.fetchGetListProductType());
-  }
+     dispatch(productTypeAction.fetchGetListProductType());
+  },
+  fetchGetAllColorOfProductType : (productTypeId) => {
+     
+  },
+  fetchGetAllSizeOfProductType : (data) => {
+    dispatch(colorActions.fetchGetListColorOfProductType(data));
+  },
+  
 });
-const fetch = window.fetch.bind(window);
 class AddProduct extends Component {
     constructor(props){
         super(props);
@@ -94,6 +106,13 @@ class AddProduct extends Component {
         });
       };
       handleCancel = () => this.setState({ previewVisible: false });
+      productTypeChange = (value) => {
+        let {fetchGetAllSizeOfProductType } = this.props;
+        let data = {
+          productTypeId : value
+        }
+        fetchGetAllSizeOfProductType(data);
+      }
     render(){
         console.log('upload')
         let dataProductType = (this.state.listProductType !==undefined ? this.state.listProductType : []).map(item => <Option value = {item.id} >{item.name}</Option>)
@@ -122,8 +141,29 @@ class AddProduct extends Component {
         <Select
               style={{ width: 200 }}
               placeholder="Select product type"
+              optionFilterProp="children"
+              onChange ={this.productTypeChange}>
+           {dataProductType}
+      </Select>
+      </div>
+      <div className="row">
+        <Select
+              disabled ={!this.state.isSelectProductType}
+              style={{ width: 200 }}
+              placeholder="Select color"
               optionFilterProp="children">
            {dataProductType}
+      </Select>
+      </div>
+      <div className ="row">
+      <Select
+          disabled ={!this.state.isClosureFrontal}
+          style={{ width: 200 }}
+          placeholder="Select size frontal or closure"
+          optionFilterProp="children">
+            <Option value="jack">Jack</Option>
+            <Option value="lucy">Lucy</Option>
+           <Option value="tom">Tom</Option>
       </Select>
       </div>
         <div className ="row">
@@ -136,22 +176,13 @@ class AddProduct extends Component {
             <Option value="lucy">Lucy</Option>
            <Option value="tom">Tom</Option>
       </Select>
-      <Select
-          disabled ={!this.state.isClosureFrontal}
-          style={{ width: 200 }}
-          placeholder="Select size frontal or closure"
-          optionFilterProp="children">
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-           <Option value="tom">Tom</Option>
-      </Select>
         </div>
         <div className ="row">
-        <Input size="large" placeholder="large size" />
+        <Input size="small" placeholder="PRICE" />
+        <Input size="large" placeholder="INFO" />
         </div>
        </div>)
     }
-
 }
 export default connect(
   mapStateToProps,

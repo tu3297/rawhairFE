@@ -242,7 +242,7 @@ class Size extends Component {
         this.setState({
           filterProductType : filters.producttype
         })
-        let sizeData ={
+        let sizeData = {
           curentPage : this.state.curentPage,
           pageSize : this.state.pageSize,
           productType : filters.producttype

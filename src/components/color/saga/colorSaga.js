@@ -11,7 +11,8 @@ import {
   import { 
     fetchListColorApi,
     fetchaddColorApi,
-    deleteColorApi
+    deleteColorApi,
+    fetchGetListColorOfProductType
   } from '../apis/color';
   export function* getListColor(action) {
     const response = yield call(fetchListColorApi);
@@ -39,4 +40,12 @@ import {
     } catch(error){
       console.log(error);
     }
+  }
+  export function* getListColorOfProductType(action){
+    try{
+      const response = yield call(fetchGetListColorOfProductType,action);
+      yield put(colorActions.fetchGetListColorOfProductTypeSuccess(response));
+   } catch(error){
+     console.log(error);
+   }
   }

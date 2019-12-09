@@ -24,3 +24,11 @@ export const deleteColorSuccess = (data) => ({
         type : types.DELETE_COLOR_SUCCESS,
         payload: data
 });
+export const fetchGetListColorOfProductType = (data) => ({
+        type : types.FETCH_GET_LIST_COLOR_PRODUCTTYPE,
+        payload : data
+});
+export const fetchGetListColorOfProductTypeSuccess = (payload) => ({
+        type : types.FETCH_GET_LIST_COLOR_PRODUCTTYPE_SUCCESS,
+        payload : payload
+});

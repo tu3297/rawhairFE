@@ -44,6 +44,19 @@ export default function color(state = initState,action){
         color : action.color
       }
     }
+    case types.FETCH_GET_LIST_COLOR_PRODUCTTYPE : {
+      return {
+        ...state,
+        isFetching : true
+      }
+    }
+    case types.FETCH_GET_LIST_COLOR_PRODUCTTYPE_SUCCESS : {
+      return {
+        ...state,
+        isFetching : false,
+        colorOfProductType : action.payload
+      }
+    }
     default: 
     return state
    }
