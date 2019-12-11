@@ -8,10 +8,12 @@ import {
   import colorReducer from './components/color/ducks';
   import productTypeReducer from './components/product/productType/ducks';
   import sizeReducer from './components/size/ducks';
+  import productReducer from './components/product/ducks'
   const rootReducer = combineReducers({
     colorReducer,
     productTypeReducer,
-    sizeReducer
+    sizeReducer,
+    productReducer
   })
   const sagaMiddleware = createSagaMiddleware()
   const store = createStore(

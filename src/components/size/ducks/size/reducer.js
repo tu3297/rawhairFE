@@ -44,6 +44,19 @@ export default function size(state = initState,action){
         size : action.size
       }
     }
+    case types.FETCH_LIST_SIZE_OF_PRODUCTTYPE : {
+      return {
+        ...state,
+        isFetching : true
+      }
+    }
+    case types.FETCH_LIST_SIZE_OF_PRODUCTTYPE_SUCCESS : {
+      return {
+        ...state,
+        isFetching : false,
+        sizeOfProductType : action.payload
+      }
+    }
     default: 
     return state
    }

@@ -24,3 +24,11 @@ export const deleteSizeSuccess = (data) => ({
         type : types.DELETE_SIZE_SUCCESS,
         payload: data
 });
+export const fetchGetListSizeOfProductType = (data) => ({
+        type : types.FETCH_LIST_SIZE_OF_PRODUCTTYPE,
+        payload: data
+});
+export const fetchGetListSizeOfProductTypeSuccess = (data) => ({
+        type : types.FETCH_LIST_SIZE_OF_PRODUCTTYPE_SUCCESS,
+        payload: data
+});

@@ -12,7 +12,8 @@ import {
   import { 
     fetchListSizeApi,
     fetchaddSizeApi,
-    deleteSizeApi
+    deleteSizeApi,
+    fetchGetListSizeOfProductType
   } from '../apis/size';
   import * as types from '../../size/ducks/size/type'
   export function* getListSize(action) {
@@ -40,6 +41,14 @@ import {
     }
      const responseList = yield call(fetchListSizeApi ,actionGetList);
       yield put(sizeAction.fetchGetListSizeSuccess(responseList));
+   } catch(error){
+     console.log(error);
+   }
+  }
+  export function* getListSizeOfProductType(action){
+    try{
+      const response = yield call(fetchGetListSizeOfProductType , action);
+      yield put(sizeAction.fetchGetListSizeOfProductTypeSuccess(response));
    } catch(error){
      console.log(error);
    }

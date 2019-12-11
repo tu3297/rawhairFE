@@ -6,9 +6,11 @@ import {
   import { 
     ptTypes,
   } from './components/product/productType/ducks/productType';
+import {productTypes} from './components/product/ducks/product'
 import { getListColor,createColor,deleteColor,getListColorOfProductType } from './components/color/saga/colorSaga'
 import { createProductType,getListProductType,deleteProductType, updateProducttypeColor,getAllProductTypeColor} from './components/product/productType/saga/productType'
-import { getListSize , addSize ,deleteSize } from './components/size/saga/size'
+import { getListSize , addSize ,deleteSize , getListSizeOfProductType} from './components/size/saga/size'
+import { getNextId } from './components/product/saga/productSaga'
 export function* rootSaga () {
     yield all([
         takeEvery(colorTypes.FETCH_LIST_COLOR,getListColor),
@@ -23,5 +25,7 @@ export function* rootSaga () {
         takeEvery(sizeTypes.FETCH_LIST_SIZE,getListSize),
         takeLatest(sizeTypes.ADD_SIZE,addSize),
         takeLatest(sizeTypes.DELETE_SIZE,deleteSize),
+        takeLatest(sizeTypes.FETCH_LIST_SIZE_OF_PRODUCTTYPE,getListSizeOfProductType),
+        takeLatest(productTypes.GET_ID,getNextId)
     ]);
 }

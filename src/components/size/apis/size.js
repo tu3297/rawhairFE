@@ -12,3 +12,7 @@ export function deleteSizeApi(sizeId){
   const deleteSize= 'size/deleteSize';
   return api.post(deleteSize,sizeId);
 }
+export function fetchGetListSizeOfProductType(productTypeId){
+  const getSizeOfProductType = 'size/getSizeOfProductType';
+  return api.get(getSizeOfProductType,productTypeId);
+}

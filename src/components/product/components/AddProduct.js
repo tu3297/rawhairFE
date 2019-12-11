@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import { Upload, Icon, Modal,message } from 'antd';
+import { Upload, Icon, Modal,message,Button } from 'antd';
 import { Select ,Input} from 'antd';
 import { connect } from 'react-redux';
 import {
@@ -11,6 +11,9 @@ import {
 import {
   sizeAction
 } from '../../size/ducks/size'
+import {
+  productAction
+} from '../../product/ducks/product'
 const { Option } = Select;
 function getBase64(img, callback) {
   return new Promise((resolve, reject) => {
@@ -33,24 +36,32 @@ function beforeUpload(file) {
     return isJpgOrPng && isLt2M;
 }
 const mapStateToProps = (state) => {
-  const { listProductType , isFetching } = state.productTypeReducer.producttype;
   console.log(state);
+  const { listProductType , isFetching } = state.productTypeReducer.producttype;
+  const {colorOfProductType} = state.colorReducer.color;
+  const {sizeOfProductType} = state.sizeReducer.size;
+  const {id} = state.productReducer.product;
   return {
     listProductType : listProductType,
     isFetching : isFetching,
+    colorOfProductType : colorOfProductType,
+    sizeOfProductType :sizeOfProductType,
+    idProduct : id
   };
 };
 const mapDispatchToProps = (dispatch) => ({
   fetchGetAllProductType : () => {
      dispatch(productTypeAction.fetchGetListProductType());
   },
-  fetchGetAllColorOfProductType : (productTypeId) => {
-     
-  },
   fetchGetAllSizeOfProductType : (data) => {
+      dispatch(sizeAction.fetchGetListSizeOfProductType(data))
+  },
+  fetchGetAllColorOfProductType : (data) => {
     dispatch(colorActions.fetchGetListColorOfProductType(data));
   },
-  
+  getData : (data) => {
+    dispatch(productAction.getNextId());
+  }
 });
 class AddProduct extends Component {
     constructor(props){
@@ -64,23 +75,19 @@ class AddProduct extends Component {
             isClosureFrontal : false
 
         };
-        this.uploaderProps = {
-        name : "file",
-        listType :"picture-card",
-        className : "avatar-uploader",
-        showUploadList : true,
-        action : 'http://localhost:5000/upload',
-        data : (file) => new FormData().append('file', file)
-       }
     }
     componentDidMount(){
-      let { fetchGetAllProductType } = this.props;
+      let { fetchGetAllProductType,getData } = this.props;
       fetchGetAllProductType();
+      getData();
     }
     componentWillReceiveProps(nextProps) {
       this.setState({
         listProductType : nextProps.listProductType,
-      })
+        colorOfProductType : nextProps.colorOfProductType,
+        sizeOfProductType : nextProps.sizeOfProductType,
+        idProduct : nextProps.idProduct
+      });
     }
     handleChange = info => {
         if (info.file.status === "uploading") {
@@ -106,16 +113,42 @@ class AddProduct extends Component {
         });
       };
       handleCancel = () => this.setState({ previewVisible: false });
-      productTypeChange = (value) => {
-        let {fetchGetAllSizeOfProductType } = this.props;
+      onChange = (value,key) => {
+        if(key.key === 'productType'){
+        this.setState({
+          isSelectProductType : true
+        })
+        let {fetchGetAllColorOfProductType,fetchGetAllSizeOfProductType } = this.props;
         let data = {
           productTypeId : value
         }
+        fetchGetAllColorOfProductType(data);
         fetchGetAllSizeOfProductType(data);
+       } else if(key.key === 'color'){
+             
+       } else if (key.key === 'frontal'){
+            
+       } else {
+           
+       }
+     }
+      save = () => {
+           
       }
     render(){
-        console.log('upload')
-        let dataProductType = (this.state.listProductType !==undefined ? this.state.listProductType : []).map(item => <Option value = {item.id} >{item.name}</Option>)
+      console.log(this.state);
+      this.uploaderProps = {
+        name : "file",
+        listType :"picture-card",
+        className : "avatar-uploader",
+        showUploadList : true,
+        action : 'http://localhost:5000/upload?id=' + this.state.idProduct,
+        data : (file) => new FormData().append('file',file),
+       }
+        let dataProductType = (this.state.listProductType !== undefined ? this.state.listProductType : []).map(item => <Option value = {item.id} key ='productType' > {item.name}</Option>)
+        let dataColor = (this.state.colorOfProductType !== undefined ? this.state.colorOfProductType : []).map(item => <Option value = {item.colorId} key ='color'> {item.colorName}</Option>)
+        let dataSize = (this.state.sizeOfProductType !== undefined ? this.state.sizeOfProductType : []).map(item => <Option value = {item.id} key ='size'> {item.length}</Option>)
+        let dataSizeFrontal = (this.state.sizeOfProductType !== undefined ? this.state.sizeOfProductType : []).map(item => <Option value = {item.id} key ='frontal'> {item.sizeFrontal}</Option>)
         const { previewVisible, previewImage, fileList } = this.state;
         const uploadButton = (
             <div>
@@ -125,6 +158,7 @@ class AddProduct extends Component {
           );
         return (
             <div className="container">
+               <Input size="small" disabled  value = {this.state.idProduct}  style={{ width: 250 }} />
                 <div className="row">
                 <Upload
                     {...this.uploaderProps}
@@ -138,11 +172,11 @@ class AddProduct extends Component {
       </Modal>
       </div>
         <div className="row">
-        <Select
+      <Select
               style={{ width: 200 }}
               placeholder="Select product type"
               optionFilterProp="children"
-              onChange ={this.productTypeChange}>
+              onChange ={this.onChange}>
            {dataProductType}
       </Select>
       </div>
@@ -151,36 +185,38 @@ class AddProduct extends Component {
               disabled ={!this.state.isSelectProductType}
               style={{ width: 200 }}
               placeholder="Select color"
-              optionFilterProp="children">
-           {dataProductType}
+              optionFilterProp="children"
+              onChange ={this.onChange}>
+           {dataColor}
       </Select>
       </div>
       <div className ="row">
       <Select
-          disabled ={!this.state.isClosureFrontal}
+          disabled ={!this.state.isSelectProductType}
           style={{ width: 200 }}
           placeholder="Select size frontal or closure"
-          optionFilterProp="children">
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-           <Option value="tom">Tom</Option>
+          optionFilterProp="children"
+          onChange ={this.onChange}>
+             {dataSizeFrontal}
       </Select>
       </div>
         <div className ="row">
       <Select
-        disabled ={!this.state.isSelectProductType}
+          disabled ={!this.state.isSelectProductType}
           style={{ width: 200 }}
           placeholder="Select size"
-          optionFilterProp="children">
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-           <Option value="tom">Tom</Option>
+          optionFilterProp="children"
+          onChange ={this.onChange}>
+              {dataSize}
       </Select>
         </div>
         <div className ="row">
-        <Input size="small" placeholder="PRICE" />
-        <Input size="large" placeholder="INFO" />
+        <Input size="small" placeholder ="PRICE"  style={{ width: 250 }}/>
         </div>
+        <div className="row">
+        <Input size="large" placeholder="INFO"  style={{ width: 250 }}/>
+        </div>
+        <Button type="primary" onClick = {this.save}>Primary</Button>
        </div>)
     }
 }
