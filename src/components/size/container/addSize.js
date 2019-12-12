@@ -30,6 +30,7 @@ class EditableCell extends React.Component {
         })
     }
   getInput = (e) => {
+    console.log(e.producttype);
     let option = this.props.listProductType.map(item => <Option value = {item.id} >{item.name}</Option>)
     if (this.props.inputType === 'select') {
       return <Select onBlur={this.save} onChange = {this.change}>
@@ -278,6 +279,7 @@ class Size extends Component {
     deleteSize(sizeData);
   };
   render() {
+    console.log('aaaa');
     const { isFetching } = this.props;
     const filter = this.state.listProductType.map(item => ({text :item.name,value :item.id}))
     const columns1 = [

@@ -72,7 +72,7 @@ class AddProduct extends Component {
             previewImage: '',
             fileList : [],
             isSelectProductType : false,
-            isClosureFrontal : false
+            isClosureFrontal : "0"
 
         };
     }
@@ -86,7 +86,8 @@ class AddProduct extends Component {
         listProductType : nextProps.listProductType,
         colorOfProductType : nextProps.colorOfProductType,
         sizeOfProductType : nextProps.sizeOfProductType,
-        idProduct : nextProps.idProduct
+        idProduct : nextProps.idProduct,
+        isClosureFrontal : (nextProps.sizeOfProductType !== undefined && nextProps.sizeOfProductType.length >0) ? nextProps.sizeOfProductType[0].isFrontalClosure : ""
       });
     }
     handleChange = info => {
@@ -144,11 +145,12 @@ class AddProduct extends Component {
         showUploadList : true,
         action : 'http://localhost:5000/upload?id=' + this.state.idProduct,
         data : (file) => new FormData().append('file',file),
-       }
+       } 
+        const sizeFrontalClosure = Array.from(new Set((this.state.sizeOfProductType !== undefined ? this.state.sizeOfProductType : []).map(item => item.sizeFrontal)));
         let dataProductType = (this.state.listProductType !== undefined ? this.state.listProductType : []).map(item => <Option value = {item.id} key ='productType' > {item.name}</Option>)
         let dataColor = (this.state.colorOfProductType !== undefined ? this.state.colorOfProductType : []).map(item => <Option value = {item.colorId} key ='color'> {item.colorName}</Option>)
         let dataSize = (this.state.sizeOfProductType !== undefined ? this.state.sizeOfProductType : []).map(item => <Option value = {item.id} key ='size'> {item.length}</Option>)
-        let dataSizeFrontal = (this.state.sizeOfProductType !== undefined ? this.state.sizeOfProductType : []).map(item => <Option value = {item.id} key ='frontal'> {item.sizeFrontal}</Option>)
+        let dataSizeFrontal = sizeFrontalClosure.map(item => <Option value = {item} key ='frontal'> {item}</Option>)
         const { previewVisible, previewImage, fileList } = this.state;
         const uploadButton = (
             <div>
@@ -192,7 +194,7 @@ class AddProduct extends Component {
       </div>
       <div className ="row">
       <Select
-          disabled ={!this.state.isSelectProductType}
+          disabled ={this.state.isClosureFrontal === "1" ? false :true}
           style={{ width: 200 }}
           placeholder="Select size frontal or closure"
           optionFilterProp="children"
@@ -202,7 +204,7 @@ class AddProduct extends Component {
       </div>
         <div className ="row">
       <Select
-          disabled ={!this.state.isSelectProductType}
+          disabled ={this.state.isClosureFrontal === "1" ? true :false}
           style={{ width: 200 }}
           placeholder="Select size"
           optionFilterProp="children"
