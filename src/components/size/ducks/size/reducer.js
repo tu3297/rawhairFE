@@ -57,6 +57,19 @@ export default function size(state = initState,action){
         sizeOfProductType : action.payload
       }
     }
+    case types.FETCH_LIST_SIZE_OF_CLOSUREFRONTAL : {
+      return {
+        ...state,
+        isFetching : true
+      }
+    }
+    case types.FETCH_LIST_SIZE_OF_PRODUCTTYPE_CLOSUREFRONTAL_SUCCESS : {
+      return {
+        ...state,
+        isFetching : false,
+        sizeOfFrontalClosure : action.payload
+      }
+    }
     default: 
     return state
    }

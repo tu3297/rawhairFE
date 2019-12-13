@@ -32,3 +32,11 @@ export const fetchGetListSizeOfProductTypeSuccess = (data) => ({
         type : types.FETCH_LIST_SIZE_OF_PRODUCTTYPE_SUCCESS,
         payload: data
 });
+export const fetchGetListSizeOfClosureFrontal = (data) => ({
+        type : types.FETCH_LIST_SIZE_OF_CLOSUREFRONTAL,
+        payload: data
+});
+export const fetchGetListSizeOfClosureFrontalSuccess = (data) => ({
+        type : types.FETCH_LIST_SIZE_OF_PRODUCTTYPE_CLOSUREFRONTAL_SUCCESS,
+        payload: data
+});

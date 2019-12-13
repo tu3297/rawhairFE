@@ -16,3 +16,7 @@ export function fetchGetListSizeOfProductType(productTypeId){
   const getSizeOfProductType = 'size/getSizeOfProductType';
   return api.get(getSizeOfProductType,productTypeId);
 }
+export function fetchGetListSizeOfClosureFrontal(productTypeId){
+  const getSizeOfFrontalClosure = 'size/getSizeOfFrontalClosure';
+  return api.get(getSizeOfFrontalClosure,productTypeId);
+}

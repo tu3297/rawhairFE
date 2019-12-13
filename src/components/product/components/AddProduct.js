@@ -40,13 +40,15 @@ const mapStateToProps = (state) => {
   const { listProductType , isFetching } = state.productTypeReducer.producttype;
   const {colorOfProductType} = state.colorReducer.color;
   const {sizeOfProductType} = state.sizeReducer.size;
+  const {sizeOfFrontalClosure} = state.sizeReducer.size;
   const {id} = state.productReducer.product;
   return {
     listProductType : listProductType,
     isFetching : isFetching,
     colorOfProductType : colorOfProductType,
     sizeOfProductType :sizeOfProductType,
-    idProduct : id
+    idProduct : id,
+    sizeOfFrontalClosure : sizeOfFrontalClosure
   };
 };
 const mapDispatchToProps = (dispatch) => ({
@@ -61,6 +63,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   getData : (data) => {
     dispatch(productAction.getNextId());
+  },
+  fetchGetAllColorOfClosureFrontal : (data) => {
+    dispatch(sizeAction.fetchGetListSizeOfClosureFrontal(data))
   }
 });
 class AddProduct extends Component {
@@ -72,7 +77,15 @@ class AddProduct extends Component {
             previewImage: '',
             fileList : [],
             isSelectProductType : false,
-            isClosureFrontal : "0"
+            isClosureFrontal : "0",
+            isSelectFrontal : true,
+            product : {
+              idProduct : "",
+              idProductType : "",
+              idColor : "",
+              sizeFrontal : "",
+              length : ""
+            }
 
         };
     }
@@ -86,8 +99,11 @@ class AddProduct extends Component {
         listProductType : nextProps.listProductType,
         colorOfProductType : nextProps.colorOfProductType,
         sizeOfProductType : nextProps.sizeOfProductType,
-        idProduct : nextProps.idProduct,
-        isClosureFrontal : (nextProps.sizeOfProductType !== undefined && nextProps.sizeOfProductType.length >0) ? nextProps.sizeOfProductType[0].isFrontalClosure : ""
+        product : {
+           idProduct :nextProps.idProduct
+        },
+        isClosureFrontal : (nextProps.sizeOfProductType !== undefined && nextProps.sizeOfProductType.length >0) ? nextProps.sizeOfProductType[0].isFrontalClosure : "",
+        sizeOfFrontalClosure : nextProps.sizeOfFrontalClosure
       });
     }
     handleChange = info => {
@@ -117,7 +133,10 @@ class AddProduct extends Component {
       onChange = (value,key) => {
         if(key.key === 'productType'){
         this.setState({
-          isSelectProductType : true
+          isSelectProductType : true,
+          product : {
+            idProductType : value
+          }
         })
         let {fetchGetAllColorOfProductType,fetchGetAllSizeOfProductType } = this.props;
         let data = {
@@ -126,11 +145,30 @@ class AddProduct extends Component {
         fetchGetAllColorOfProductType(data);
         fetchGetAllSizeOfProductType(data);
        } else if(key.key === 'color'){
-             
+             this.setState({
+               product : {
+                 idColor : value
+               }
+             })
        } else if (key.key === 'frontal'){
-            
+         this.setState({
+           isSelectFrontal : false,
+           product : {
+             sizeFrontal : value
+           }
+          });
+         let { fetchGetAllColorOfClosureFrontal } = this.props;
+         let data = {
+          productTypeId : this.state.product.idProductType,
+          size : value
+        }
+        fetchGetAllColorOfClosureFrontal(data)
        } else {
-           
+        this.setState({
+          product : {
+            length : value
+          }
+         });
        }
      }
       save = () => {
@@ -143,13 +181,15 @@ class AddProduct extends Component {
         listType :"picture-card",
         className : "avatar-uploader",
         showUploadList : true,
-        action : 'http://localhost:5000/upload?id=' + this.state.idProduct,
+        action : 'http://localhost:5000/upload?id=' + this.state.product.idProduct,
         data : (file) => new FormData().append('file',file),
        } 
         const sizeFrontalClosure = Array.from(new Set((this.state.sizeOfProductType !== undefined ? this.state.sizeOfProductType : []).map(item => item.sizeFrontal)));
         let dataProductType = (this.state.listProductType !== undefined ? this.state.listProductType : []).map(item => <Option value = {item.id} key ='productType' > {item.name}</Option>)
-        let dataColor = (this.state.colorOfProductType !== undefined ? this.state.colorOfProductType : []).map(item => <Option value = {item.colorId} key ='color'> {item.colorName}</Option>)
-        let dataSize = (this.state.sizeOfProductType !== undefined ? this.state.sizeOfProductType : []).map(item => <Option value = {item.id} key ='size'> {item.length}</Option>)
+        let dataColor = (this.state.colorOfProductType !== undefined ? this.state.colorOfProductType : []).map(item => <Option value = {item.colorId} key ='color'> {item.colorCode}</Option>)
+        let dataSize =[];
+        if(!this.state.isSelectFrontal) dataSize = (this.state.sizeOfFrontalClosure !== undefined ? this.state.sizeOfFrontalClosure : []).map(item => <Option value = {item.id} key ='size'> {item.length}</Option>)
+        else dataSize = (this.state.sizeOfProductType !== undefined ? this.state.sizeOfProductType : []).map(item => <Option value = {item.id} key ='size'> {item.length}</Option>)
         let dataSizeFrontal = sizeFrontalClosure.map(item => <Option value = {item} key ='frontal'> {item}</Option>)
         const { previewVisible, previewImage, fileList } = this.state;
         const uploadButton = (
@@ -160,7 +200,7 @@ class AddProduct extends Component {
           );
         return (
             <div className="container">
-               <Input size="small" disabled  value = {this.state.idProduct}  style={{ width: 250 }} />
+               <Input size="small" disabled  value = {this.state.product.idProduct}  style={{ width: 250 }} />
                 <div className="row">
                 <Upload
                     {...this.uploaderProps}
@@ -204,12 +244,12 @@ class AddProduct extends Component {
       </div>
         <div className ="row">
       <Select
-          disabled ={this.state.isClosureFrontal === "1" ? true :false}
+          disabled ={(this.state.isClosureFrontal === "1" ? true : false) && this.state.isSelectFrontal }
           style={{ width: 200 }}
           placeholder="Select size"
           optionFilterProp="children"
           onChange ={this.onChange}>
-              {dataSize}
+             {dataSize}
       </Select>
         </div>
         <div className ="row">
