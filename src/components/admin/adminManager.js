@@ -86,7 +86,7 @@ class AdminManager extends Component {
                 <Route path={`${match.path}/size`} component={props => <Size  {...props}/>} />
                 <Route path={`${match.path}/pt`} component={props => <ProductType  {...props}/>} />
                 <Route path={`${match.path}/prt`} component={props => <ProductTypeSize {...props}/>} />
-                <Route path={`${match.path}/product`} component={props => <AddProduct {...props}/>} />
+                <Route path={`${match.path}/product`} component={props => <ListProduct {...props}/>} />
                 <Route path={`${match.path}/config`} component={props => <PTColor {...props}/>} />
               </Switch>
           </div>

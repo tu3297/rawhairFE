@@ -1,90 +1,65 @@
-import { Table, Divider, Tag , Input , Button } from 'antd';
+import { Table, Divider, Tag , Input , Button,Pagination } from 'antd';
 import React,{ Component } from 'react';
 import { Select } from 'antd';
+import * as Constants from '../../../commom/Constants.js'
 const { Option } = Select;
 class ListProduct extends Component {
     constructor(props){
         super(props);
+        this.state ={
+          curentPage : 1,
+          pageSize : Constants.PAGE_SIZE,
+        }
     }
     render(){
    const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
+    title: 'Id',
+    dataIndex: 'id',
+    key: 'ID',
     render: text => <a>{text}</a>,
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: 'Product Type',
+    dataIndex: 'producttype',
+    key: 'producttype',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    title: 'Length',
+    dataIndex: 'length',
+    key: 'length',
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: tags => (
-      <span>
-        {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </span>
-    ),
+    title: 'Color',
+    dataIndex: 'color',
+    key: 'color',
+  },
+  {
+    title: 'Price',
+    dataIndex: 'price',
+    key: 'price',
   },
   {
     title: 'Action',
     key: 'action',
     render: (text, record) => (
       <span>
-        <a>Invite {record.name}</a>
-        <Divider type="vertical" />
+        <a>Update</a>
+        <Divider type="vertical"/>
         <a>Delete</a>
       </span>
     ),
   },
 ];
-
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
- ];
+let pagination =<Pagination defaultCurrent={this.state.curentPage} defaultPageSize={this.state.pageSize} 
+total ={this.state.total}
+onChange={this.onPageChange}>
+</Pagination>
+const data = [];
  return (
     <div> 
     <div>
-       <Input style={{ width: 200 }} placeholder="Code" />
-       <Input style={{ width: 200 }} placeholder="Name" />
+       <Input style={{ width: 200 }} placeholder="ID" />
        <Select style={{ width: 200 }} placeholder="Length">
            <Option value="jack">Jack</Option>
        </Select>
@@ -100,6 +75,9 @@ const data = [
     <div> 
         <Table columns={columns} dataSource={data} />
     </div>
+    <div className="float-right">
+            {pagination}
+        </div>
     </div>
  );
 }

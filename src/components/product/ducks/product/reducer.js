@@ -17,6 +17,19 @@ export default function product(state = initState,action){
           id : action.payload.Id
         }
    }
+   case types.SAVE_PRODUCT :{
+    return {
+      ...state,
+      isFetching : true,
+    }
+}
+case types.SAVE_PRODUCT_SUCCESS :{
+   return {
+     ...state,
+     isFetching : false,
+     id : action.payload.Id
+   }
+}
     default: 
     return state
    }

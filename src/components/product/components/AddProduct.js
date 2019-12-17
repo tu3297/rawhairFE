@@ -36,7 +36,6 @@ function beforeUpload(file) {
     return isJpgOrPng && isLt2M;
 }
 const mapStateToProps = (state) => {
-  console.log(state);
   const { listProductType , isFetching } = state.productTypeReducer.producttype;
   const {colorOfProductType} = state.colorReducer.color;
   const {sizeOfProductType} = state.sizeReducer.size;
@@ -66,6 +65,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   fetchGetAllColorOfClosureFrontal : (data) => {
     dispatch(sizeAction.fetchGetListSizeOfClosureFrontal(data))
+  },
+  saveProduct : (data) => {
+    dispatch(productAction.saveProduct(data))
   }
 });
 class AddProduct extends Component {
@@ -79,13 +81,7 @@ class AddProduct extends Component {
             isSelectProductType : false,
             isClosureFrontal : "0",
             isSelectFrontal : true,
-            product : {
-              idProduct : "",
-              idProductType : "",
-              idColor : "",
-              sizeFrontal : "",
-              length : ""
-            }
+            product : []
 
         };
     }
@@ -100,7 +96,8 @@ class AddProduct extends Component {
         colorOfProductType : nextProps.colorOfProductType,
         sizeOfProductType : nextProps.sizeOfProductType,
         product : {
-           idProduct :nextProps.idProduct
+           ...this.state.product,
+           idProduct : nextProps.idProduct
         },
         isClosureFrontal : (nextProps.sizeOfProductType !== undefined && nextProps.sizeOfProductType.length >0) ? nextProps.sizeOfProductType[0].isFrontalClosure : "",
         sizeOfFrontalClosure : nextProps.sizeOfFrontalClosure
@@ -130,52 +127,49 @@ class AddProduct extends Component {
         });
       };
       handleCancel = () => this.setState({ previewVisible: false });
-      onChange = (value,key) => {
+      onChange = (value , key) => {
         if(key.key === 'productType'){
-        this.setState({
-          isSelectProductType : true,
-          product : {
-            idProductType : value
-          }
-        })
         let {fetchGetAllColorOfProductType,fetchGetAllSizeOfProductType } = this.props;
         let data = {
           productTypeId : value
         }
+        this.setState({
+          product : Object.assign({}, this.state.product, { 'idProductType' : value })});
         fetchGetAllColorOfProductType(data);
         fetchGetAllSizeOfProductType(data);
        } else if(key.key === 'color'){
-             this.setState({
-               product : {
-                 idColor : value
-               }
-             })
+         this.setState({
+          product : Object.assign({}, this.state.product, { 'idColor' : value })});
        } else if (key.key === 'frontal'){
          this.setState({
-           isSelectFrontal : false,
-           product : {
-             sizeFrontal : value
-           }
-          });
+          isSelectFrontal :false,
+          product : Object.assign({}, this.state.product, { 'sizeFrontal' : value })}
+      );
          let { fetchGetAllColorOfClosureFrontal } = this.props;
          let data = {
-          productTypeId : this.state.product.idProductType,
+          productTypeId : +this.state.product.idProductType,
           size : value
         }
         fetchGetAllColorOfClosureFrontal(data)
        } else {
         this.setState({
-          product : {
-            length : value
-          }
-         });
-       }
+          product : Object.assign({}, this.state.product, { 'idSize' : value })});
+    }
+     }
+     InputPriceChange = (e) => {
+        let price = e.target.value;
+        this.setState({
+          product : Object.assign({}, this.state.product, { 'price' : price })});
+     }
+     InputInfoChange = (e) => {
+        let info = e.target.value;
      }
       save = () => {
-           
+           let {saveProduct} = this.props;
+           let productData = this.state.product;
+           saveProduct(productData)
       }
     render(){
-      console.log(this.state);
       this.uploaderProps = {
         name : "file",
         listType :"picture-card",
@@ -194,7 +188,7 @@ class AddProduct extends Component {
         const { previewVisible, previewImage, fileList } = this.state;
         const uploadButton = (
             <div>
-              <Icon type={this.state.loading ? "loading" : "plus"} />
+              <Icon type = {this.state.loading ? "loading" : "plus"} />
               <div className="ant-upload-text">Upload</div>
             </div>
           );
@@ -224,7 +218,6 @@ class AddProduct extends Component {
       </div>
       <div className="row">
         <Select
-              disabled ={!this.state.isSelectProductType}
               style={{ width: 200 }}
               placeholder="Select color"
               optionFilterProp="children"
@@ -253,12 +246,12 @@ class AddProduct extends Component {
       </Select>
         </div>
         <div className ="row">
-        <Input size="small" placeholder ="PRICE"  style={{ width: 250 }}/>
+        <Input size="small" placeholder ="PRICE" style={{ width: 250 }} key = "price" onChange = {this.InputPriceChange}/>
         </div>
         <div className="row">
-        <Input size="large" placeholder="INFO"  style={{ width: 250 }}/>
+        <Input size="large" placeholder="INFO" style={{ width: 250 }} key = "info" onChange = {this.InputInfoChange}/>
         </div>
-        <Button type="primary" onClick = {this.save}>Primary</Button>
+        <Button type="primary" onClick = {this.save}>Save</Button>
        </div>)
     }
 }

@@ -6,3 +6,10 @@ export function getNextIdApi(action) {
     null, 
   );
 }
+  export function saveProductApi(productData) {
+  const saveProduct = 'product/saveProduct';
+  return api.post(
+    saveProduct, 
+    productData, 
+  );
+}
