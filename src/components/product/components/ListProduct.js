@@ -9,6 +9,10 @@ class ListProduct extends Component {
         this.state ={
           curentPage : 1,
           pageSize : Constants.PAGE_SIZE,
+          producttype : [],
+          color : [],
+          length : [],
+
         }
     }
     render(){
@@ -38,6 +42,7 @@ class ListProduct extends Component {
     title: 'Price',
     dataIndex: 'price',
     key: 'price',
+    sorter : true
   },
   {
     title: 'Action',
@@ -60,13 +65,13 @@ const data = [];
     <div> 
     <div>
        <Input style={{ width: 200 }} placeholder="ID" />
-       <Select style={{ width: 200 }} placeholder="Length">
+       <Select style={{ width: 200 }} placeholder="Length" mode="multiple">
            <Option value="jack">Jack</Option>
        </Select>
-       <Select   style={{ width: 200 }} placeholder="Product Type">
+       <Select   style={{ width: 200 }} placeholder="Product Type" mode="multiple">
            <Option value="jack">Jack</Option>
        </Select>
-       <Select   style={{ width: 200 }} placeholder="Color">
+       <Select   style={{ width: 200 }} placeholder="Color" mode="multiple">
            <Option value="jack">Jack</Option>
        </Select>
        <Button shape="circle" icon="search" />
