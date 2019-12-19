@@ -1,8 +1,31 @@
 import { Table, Divider, Tag , Input , Button,Pagination } from 'antd';
 import React,{ Component } from 'react';
 import { Select } from 'antd';
+import { connect } from 'react-redux';
 import * as Constants from '../../../commom/Constants.js'
+import {
+  productTypeAction
+} from '../../product/productType/ducks/productType'
+import {
+  colorActions
+} from '../../color/ducks/color'
 const { Option } = Select;
+const mapStateToProps = (state) => {
+    const { listProductType , isFetching } = state.productTypeReducer.producttype;
+    const {listColor} = state.colorReducer.color;
+    return {
+      listProductType : listProductType,
+      listColor : listColor
+    }
+}
+const mapDispatchToProps = (dispatch) => ({
+  fetchGetAllProductType : () => {
+    dispatch(productTypeAction.fetchGetListProductType());
+ },
+ fetchGetAllColor : () => {
+  dispatch(colorActions.fetchGetListColor());
+},
+})
 class ListProduct extends Component {
     constructor(props){
         super(props);
@@ -12,10 +35,50 @@ class ListProduct extends Component {
           producttype : [],
           color : [],
           length : [],
-
+          idProduct :"",
+          listColor : [],
+          listProductType : [],
         }
     }
+    componentDidMount(){
+      let {fetchGetAllProductType,fetchGetAllColor} = this.props;
+      fetchGetAllColor();
+      fetchGetAllProductType();
+    }
+    componentWillReceiveProps(nextProps) {
+      this.setState({
+         listProductType : nextProps.listProductType,
+         listColor : nextProps.listColor
+      });
+    }
+    onChange = (value,key) =>{
+      console.log(key)
+        if(key[0].key === 'length'){
+          this.setState({
+              ...this.state,
+              length : value
+          })
+       } else if (key[0].key === "color"){
+        this.setState({
+            ...this.state,
+            color : value
+        })
+        } else if (key[0].key === "productType"){
+          this.setState({
+              ...this.state,
+              producttype : value
+          })
+         }
+    }
+    search =() =>{
+      console.log(this.state)
+    }
     render(){
+    console.log(this.state);
+    const length = [8,10,12,14,16,18,20,22,24,26,28,30,32,34,36].map(item => item +"");
+    let lengthData = length.map(item => <Option key="length" value ={item} >{item}</Option>)
+    let colorData = this.state.listColor.map(item => <Option key="color" value ={item.colorId} >{item.colorName}</Option>)
+    let producttypeData = this.state.listProductType.map(item => <Option key="productType" value ={item.id} >{item.name}</Option>)
    const columns = [
   {
     title: 'Id',
@@ -65,16 +128,16 @@ const data = [];
     <div> 
     <div>
        <Input style={{ width: 200 }} placeholder="ID" />
-       <Select style={{ width: 200 }} placeholder="Length" mode="multiple">
-           <Option value="jack">Jack</Option>
+       <Select style={{ width: 200 }} placeholder="Length" mode="multiple" onChange ={this.onChange}>
+          {lengthData}
        </Select>
-       <Select   style={{ width: 200 }} placeholder="Product Type" mode="multiple">
-           <Option value="jack">Jack</Option>
+       <Select   style={{ width: 200 }} placeholder="Product Type" mode="multiple" onChange ={this.onChange}>
+          {colorData}
        </Select>
-       <Select   style={{ width: 200 }} placeholder="Color" mode="multiple">
-           <Option value="jack">Jack</Option>
+       <Select   style={{ width: 200 }} placeholder="Color" mode="multiple" onChange ={this.onChange}>
+          {producttypeData}
        </Select>
-       <Button shape="circle" icon="search" />
+       <Button shape="circle" icon="search" onClick = {this.search}/>
        <Button type="primary" shape="circle" icon ="plus"></Button>
        </div>
     <div> 
@@ -87,4 +150,7 @@ const data = [];
  );
 }
 }
-export default ListProduct;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ListProduct);
