@@ -22,6 +22,7 @@ function request(props){
     })
     .then(handleErrorResponse)
 } else {
+  console.log('get');
   let param = querystring1(option !== null ? option.payload : undefined);
   return fetch(fetchUrl + param, {
     method: init.method,

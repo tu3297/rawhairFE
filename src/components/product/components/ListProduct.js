@@ -9,6 +9,9 @@ import {
 import {
   colorActions
 } from '../../color/ducks/color'
+import {
+  productAction
+} from '../../product/ducks/product'
 const { Option } = Select;
 const mapStateToProps = (state) => {
     const { listProductType , isFetching } = state.productTypeReducer.producttype;
@@ -22,9 +25,12 @@ const mapDispatchToProps = (dispatch) => ({
   fetchGetAllProductType : () => {
     dispatch(productTypeAction.fetchGetListProductType());
  },
- fetchGetAllColor : () => {
-  dispatch(colorActions.fetchGetListColor());
-},
+  fetchGetAllColor : () => {
+    dispatch(colorActions.fetchGetListColor());
+ },
+  fetchGetAllProduct : (data) => {
+    dispatch(productAction.getAllProduct(data));
+  }
 })
 class ListProduct extends Component {
     constructor(props){
@@ -70,8 +76,19 @@ class ListProduct extends Component {
           })
          }
     }
-    search =() =>{
+    search = () =>{
       console.log(this.state)
+      let data = {
+          pageSize : this.state.pageSize,
+          curentPage : this.state.curentPage,
+          id : this.state.idProduct,
+          productType : this.state.producttype.join(),
+          length : this.state.length.join(),
+          color : this.state.color.join()
+      }
+      console.log(data);
+      let {fetchGetAllProduct} = this.props;
+      fetchGetAllProduct(data);
     }
     render(){
     console.log(this.state);

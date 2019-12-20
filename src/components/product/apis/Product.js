@@ -12,4 +12,11 @@ export function getNextIdApi(action) {
     saveProduct, 
     productData, 
   );
-}
+  }
+  export function getAllProductApi(productData) {
+    const getAll = 'product/getAll';
+    return api.get(
+      getAll, 
+      productData, 
+    );
+  }
