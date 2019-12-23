@@ -16,9 +16,11 @@ const { Option } = Select;
 const mapStateToProps = (state) => {
     const { listProductType , isFetching } = state.productTypeReducer.producttype;
     const {listColor} = state.colorReducer.color;
+    const {listProduct} = state.productReducer.product;
     return {
       listProductType : listProductType,
-      listColor : listColor
+      listColor : listColor,
+      listProduct : listProduct
     }
 }
 const mapDispatchToProps = (dispatch) => ({
@@ -44,17 +46,32 @@ class ListProduct extends Component {
           idProduct :"",
           listColor : [],
           listProductType : [],
+          sort : {
+            price : false
+          }
         }
     }
     componentDidMount(){
       let {fetchGetAllProductType,fetchGetAllColor} = this.props;
+      let {fetchGetAllProduct} = this.props;
+      let data = {
+        pageSize : this.state.pageSize,
+        curentPage : this.state.curentPage,
+        id : this.state.idProduct,
+        productType : this.state.producttype.join(),
+        length : this.state.length.join(),
+        color : this.state.color.join(),
+        sort : this.state.sort.price
+    }
+      fetchGetAllProduct(data);
       fetchGetAllColor();
       fetchGetAllProductType();
     }
     componentWillReceiveProps(nextProps) {
       this.setState({
          listProductType : nextProps.listProductType,
-         listColor : nextProps.listColor
+         listColor : nextProps.listColor,
+         listProduct : nextProps.listProduct
       });
     }
     onChange = (value,key) =>{
@@ -77,14 +94,15 @@ class ListProduct extends Component {
          }
     }
     search = () =>{
-      console.log(this.state)
+      
       let data = {
           pageSize : this.state.pageSize,
           curentPage : this.state.curentPage,
           id : this.state.idProduct,
           productType : this.state.producttype.join(),
           length : this.state.length.join(),
-          color : this.state.color.join()
+          color : this.state.color.join(),
+          sort : this.state.sort.price
       }
       console.log(data);
       let {fetchGetAllProduct} = this.props;
@@ -148,10 +166,10 @@ const data = [];
        <Select style={{ width: 200 }} placeholder="Length" mode="multiple" onChange ={this.onChange}>
           {lengthData}
        </Select>
-       <Select   style={{ width: 200 }} placeholder="Product Type" mode="multiple" onChange ={this.onChange}>
+       <Select   style={{ width: 200 }} placeholder="Color" mode="multiple" onChange ={this.onChange}>
           {colorData}
        </Select>
-       <Select   style={{ width: 200 }} placeholder="Color" mode="multiple" onChange ={this.onChange}>
+       <Select   style={{ width: 200 }} placeholder="Product Type" mode="multiple" onChange ={this.onChange}>
           {producttypeData}
        </Select>
        <Button shape="circle" icon="search" onClick = {this.search}/>
