@@ -3,7 +3,7 @@ import {
     call 
   } from 'redux-saga/effects';
   import {productAction} from '../ducks/product'
-  import { getNextIdApi,saveProductApi,getAllProductApi} from '../apis/Product'
+  import { getNextIdApi,saveProductApi,getAllProductApi,getProductApi} from '../apis/Product'
   export function* getNextId(action){
     try{
       const response = yield call(getNextIdApi,action);
@@ -24,6 +24,14 @@ import {
     try{
       const response = yield call(getAllProductApi,action);
       yield put(productAction.getAllProductSuccess(response));
+   } catch(error){
+     console.log(error);
+   }
+  }
+  export function* getProduct(action){
+    try{
+      const response = yield call(getProductApi,action);
+      yield put(productAction.getProductSuccess(response));
    } catch(error){
      console.log(error);
    }

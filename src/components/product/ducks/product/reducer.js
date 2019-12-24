@@ -43,6 +43,19 @@ export default function product(state = initState,action){
     listProduct : action.payload
    }
    }
+   case types.GET_PRODUCT : {
+    return {
+    ...state,
+    isFetching : true,
+   }
+   }
+   case types.GET_PRODUCT_SUCCESS : {
+    return {
+    ...state,
+    isFetching : false,
+    product : action.payload
+   }
+   }
     default: 
     return state
    }

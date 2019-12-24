@@ -19,7 +19,6 @@ import {
     yield put(colorActions.fetchGetListColorSuccess(response));
   }
   export function* createColor(action){
-    console.log(action);
     try{
        const responseAdd = yield call(fetchaddColorApi,action.payload);
        yield put(colorActions.addColorSuccess(responseAdd));
@@ -30,10 +29,9 @@ import {
     }
   }
   export function* deleteColor(action){
-    console.log(action);
     try{
        const responseDelete = yield call(deleteColorApi,action.payload);
-       console.log(responseDelete);
+
        yield put(colorActions.deleteColorSuccess(responseDelete));
        const responseList = yield call(fetchListColorApi);
        yield put(colorActions.fetchGetListColorSuccess(responseList));

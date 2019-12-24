@@ -6,8 +6,8 @@ import Size from '../size/container/addSize.js';
 import ProductType from '../product/productType/container/addProductType';
 import ProductTypeSize from '../product/productTypeSize/addProductTypeSize.js';
 import ListProduct from '../product/components/ListProduct'
-import AddProduct from '../product/components/AddProduct'
 import PTColor from '../config/component/ProductTypeColor/container/PTColor'
+import AddProduct from '../product/components/AddProduct'
 const subMenu = [
     {
       id: 0,
@@ -63,6 +63,10 @@ const subMenu = [
       id: 10,
       text: 'Config',
       link: '/config'
+    }, {
+      id: 11,
+      text: 'createProduct',
+      link: '/createProduct'
     }
   ];
 class AdminManager extends Component {
@@ -86,8 +90,9 @@ class AdminManager extends Component {
                 <Route path={`${match.path}/size`} component={props => <Size  {...props}/>} />
                 <Route path={`${match.path}/pt`} component={props => <ProductType  {...props}/>} />
                 <Route path={`${match.path}/prt`} component={props => <ProductTypeSize {...props}/>} />
-                <Route path={`${match.path}/product`} component={props => <ListProduct {...props}/>} />
+                <Route exact path={`${match.path}/product`} component={props => <ListProduct {...props}/>} />
                 <Route path={`${match.path}/config`} component={props => <PTColor {...props}/>} />
+                <Route exact path={`${match.path}/product/createProduct`} component={props => <AddProduct  {...props}/>} />
               </Switch>
           </div>
           </div>

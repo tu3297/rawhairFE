@@ -50,7 +50,6 @@ class Home extends Component {
                     <div class ="col-8 my-auto">
                    <Search
                           placeholder="input search text"
-                          onSearch={value => console.log(value)}
                           style={{ width: '100%' }}/>
                    </div>              
                 </div>

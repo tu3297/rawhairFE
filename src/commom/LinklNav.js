@@ -6,7 +6,6 @@ class Sidebar extends Component {
   }
   renderMenu(data) {
     const props = this.props.match;
-    console.log(props);
     return data.map((element, key) => {
       return (
         <li key={key} className="nav-item">
@@ -14,7 +13,7 @@ class Sidebar extends Component {
             className="nav-link"
             activeClassName="active active-menu"
             to = {props === undefined ? element.link : props.url.concat(element.link)}>
-            <span className="nav-text">{element.text}</span>
+            {element.id !== 11 ?<span className="nav-text">{element.text}</span> : <p></p>}
           </NavLink>
         </li>
       );

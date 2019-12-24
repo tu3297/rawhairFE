@@ -4,7 +4,6 @@ const initState = {
     isFetching: false,
   }
 export default function productType(state = initState,action){
-  console.log(action);
    switch(action.type){
     case types.FETCH_LIST_PRODUCTTYPE :{
          return {

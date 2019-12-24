@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 class CartDrawer extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
         this.state = {
             visible: props.location.state.cart
         }

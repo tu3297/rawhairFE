@@ -8,7 +8,6 @@ export function fetchListProductTypeApi() {
   );
 }
 export function fetchaddProductTypeApi(productTypeData){
-  console.log('add prt');
   const addProductType = 'prt/addProductType';
   return api.post(addProductType,productTypeData);
 }

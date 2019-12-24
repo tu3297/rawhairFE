@@ -23,3 +23,11 @@ export const getAllProductSuccess = (payload) => ({
     type : types.GET_ALL_PRODUCT_SUCCESS,
     payload : payload
 });
+export const getProduct = (data) =>({
+    type : types.GET_PRODUCT,
+    payload : data
+});
+export const getProductSuccess = (payload) => ({
+    type : types.GET_PRODUCT_SUCCESS,
+    payload : payload
+});

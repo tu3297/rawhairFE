@@ -1,6 +1,7 @@
 import { Table, Divider, Tag , Input , Button,Pagination } from 'antd';
 import React,{ Component } from 'react';
 import { Select } from 'antd';
+import { Switch, Route, Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import * as Constants from '../../../commom/Constants.js'
 import {
@@ -37,6 +38,7 @@ const mapDispatchToProps = (dispatch) => ({
 class ListProduct extends Component {
     constructor(props){
         super(props);
+        console.log(props)
         this.state ={
           curentPage : 1,
           pageSize : Constants.PAGE_SIZE,
@@ -47,7 +49,7 @@ class ListProduct extends Component {
           listColor : [],
           listProductType : [],
           sort : {
-            price : false
+            price : 'none'
           }
         }
     }
@@ -75,7 +77,7 @@ class ListProduct extends Component {
       });
     }
     onChange = (value,key) =>{
-      console.log(key)
+
         if(key[0].key === 'length'){
           this.setState({
               ...this.state,
@@ -93,8 +95,20 @@ class ListProduct extends Component {
           })
          }
     }
+    handleTable = (pagination,filters,sorter) =>{
+      let {fetchGetAllProduct} = this.props;
+      let data = {
+        pageSize : this.state.pageSize,
+        curentPage : this.state.curentPage,
+        id : this.state.idProduct,
+        productType : this.state.producttype.join(),
+        length : this.state.length.join(),
+        color : this.state.color.join(),
+        sort : sorter.order === undefined ? 'none' : sorter.order
+    }
+    fetchGetAllProduct(data);
+    }
     search = () =>{
-      
       let data = {
           pageSize : this.state.pageSize,
           curentPage : this.state.curentPage,
@@ -104,12 +118,21 @@ class ListProduct extends Component {
           color : this.state.color.join(),
           sort : this.state.sort.price
       }
-      console.log(data);
       let {fetchGetAllProduct} = this.props;
       fetchGetAllProduct(data);
     }
+    createNew = () => {
+      this.props.history.push(`${this.props.match.path}/createProduct`)
+    }
+    update = (value) => {
+      console.log(value);
+      this.props.history.push({
+        pathname :`${this.props.match.path}/createProduct`,
+        search : '?mode=update',
+        state : { idProduct : value }
+     })
+    }
     render(){
-    console.log(this.state);
     const length = [8,10,12,14,16,18,20,22,24,26,28,30,32,34,36].map(item => item +"");
     let lengthData = length.map(item => <Option key="length" value ={item} >{item}</Option>)
     let colorData = this.state.listColor.map(item => <Option key="color" value ={item.colorId} >{item.colorName}</Option>)
@@ -117,14 +140,14 @@ class ListProduct extends Component {
    const columns = [
   {
     title: 'Id',
-    dataIndex: 'id',
-    key: 'ID',
-    render: text => <a>{text}</a>,
+    dataIndex: 'idProduct',
+    key: 'idProduct',
+    render: (text,record) => <a style ={{textDecoration : 'underline'}} onClick ={ () => this.update(record.idProduct)} value ={record.idProduct}>{text}</a>,
   },
   {
     title: 'Product Type',
-    dataIndex: 'producttype',
-    key: 'producttype',
+    dataIndex: 'productTypeName',
+    key: 'productTypeName',
   },
   {
     title: 'Length',
@@ -135,6 +158,12 @@ class ListProduct extends Component {
     title: 'Color',
     dataIndex: 'color',
     key: 'color',
+    render : (text,record) => (
+      <span>
+        <Button style={{backgroundColor: record.colorName,display : 'inline-block'}} shape="circle" icon="" />
+        <Divider type ="vertical"/>
+      </span>
+    )
   },
   {
     title: 'Price',
@@ -147,8 +176,6 @@ class ListProduct extends Component {
     key: 'action',
     render: (text, record) => (
       <span>
-        <a>Update</a>
-        <Divider type="vertical"/>
         <a>Delete</a>
       </span>
     ),
@@ -158,7 +185,8 @@ let pagination =<Pagination defaultCurrent={this.state.curentPage} defaultPageSi
 total ={this.state.total}
 onChange={this.onPageChange}>
 </Pagination>
-const data = [];
+const data = this.state.listProduct;
+const match = this.props.match;
  return (
     <div> 
     <div>
@@ -173,14 +201,18 @@ const data = [];
           {producttypeData}
        </Select>
        <Button shape="circle" icon="search" onClick = {this.search}/>
-       <Button type="primary" shape="circle" icon ="plus"></Button>
+       <Button type="primary" shape="circle" icon ="plus" onClick = {this.createNew}></Button>
        </div>
     <div> 
-        <Table columns={columns} dataSource={data} />
+        <Table 
+          columns={columns} 
+          dataSource={data} 
+          pagination = {false}
+          onChange = {this.handleTable} />
     </div>
     <div className="float-right">
             {pagination}
-        </div>
+    </div>
     </div>
  );
 }

@@ -18,12 +18,10 @@ import {
   } from '../apis/size';
   import * as types from '../../size/ducks/size/type'
   export function* getListSize(action) {
-    console.log(action);
     const response = yield call(fetchListSizeApi,action);
     yield put(sizeAction.fetchGetListSizeSuccess(response));
   }
   export function* addSize(action) {
-    console.log(action);
     const response = yield call(fetchaddSizeApi,action.payload.sizeData);
     let actionGetList = {
         type : types.FETCH_LIST_SIZE,

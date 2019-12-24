@@ -36,6 +36,7 @@ function beforeUpload(file) {
     return isJpgOrPng && isLt2M;
 }
 const mapStateToProps = (state) => {
+  console.log(state)
   const { listProductType , isFetching } = state.productTypeReducer.producttype;
   const {colorOfProductType} = state.colorReducer.color;
   const {sizeOfProductType} = state.sizeReducer.size;
@@ -68,11 +69,22 @@ const mapDispatchToProps = (dispatch) => ({
   },
   saveProduct : (data) => {
     dispatch(productAction.saveProduct(data))
+  },
+  fetchGetProduct : (data) => {
+    dispatch(productAction.getProduct(data))
   }
 });
 class AddProduct extends Component {
     constructor(props){
         super(props);
+        console.log(props)
+        let idProduct = ''
+        const search = props.location.search;
+        const params = new URLSearchParams(search);
+        const mode = params.get('mode');
+        if(mode === 'update') {
+          idProduct = props.location.state.idProduct
+        }
         this.state = {
             loading: false,
             previewVisible: false,
@@ -81,14 +93,21 @@ class AddProduct extends Component {
             isSelectProductType : false,
             isClosureFrontal : "0",
             isSelectFrontal : true,
-            product : []
-
+            product : [],
+            idProductUpdate : idProduct,
+            mode : mode
         };
     }
     componentDidMount(){
-      let { fetchGetAllProductType,getData } = this.props;
+      let { fetchGetAllProductType , getData , fetchGetProduct } = this.props;
+      if(this.state.idProductUpdate !== "") {
+        let data = {
+          idProduct : this.state.idProductUpdate
+        }
+        fetchGetProduct(data)
+      }
       fetchGetAllProductType();
-      getData();
+      if(this.state.mode !== 'update') getData();
     }
     componentWillReceiveProps(nextProps) {
       this.setState({

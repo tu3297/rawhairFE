@@ -19,7 +19,6 @@ const EditableRow = ({ form, index, ...props }) => (
 );
 
 const EditableFormRow = Form.create()(EditableRow);
-
 class EditableCell extends React.Component {
     constructor(props){
         super(props);
@@ -255,7 +254,7 @@ class Size extends Component {
     this.setState({
       curentPage : page
     })
-    let sizeData ={
+    let sizeData = {
       curentPage :page,
       pageSize : pageSize,
       productType : this.state.filterProductType
@@ -279,7 +278,6 @@ class Size extends Component {
     deleteSize(sizeData);
   };
   render() {
-    console.log('aaaa');
     const { isFetching } = this.props;
     const filter = this.state.listProductType.map(item => ({text :item.name,value :item.id}))
     const columns1 = [

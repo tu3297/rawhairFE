@@ -4,7 +4,6 @@ import colorReducer, { colorActions } from '../../../../color/ducks/color';
 import { Select ,Input,Checkbox, Table} from 'antd';
 import { productTypeAction } from '../../../../product/productType/ducks/productType';
 const mapStateToProps = (state) => {
-    console.log(state);
     return {
         listColor : state.colorReducer.color.listColor,
         listProductType : state.productTypeReducer.producttype.listProductType,

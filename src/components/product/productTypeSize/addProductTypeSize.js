@@ -18,7 +18,6 @@ class EditableCell extends React.Component {
         })
     }
   getInput = () => {
-     console.log(this.props);
     if (this.props.inputType === 'select') {
       return <Select onBlur={this.save}>
            <Option value="jack">Jack</Option>
@@ -41,7 +40,6 @@ class EditableCell extends React.Component {
     } else return<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />;
   };
   toggleEdit = () => {
-      console.log(this.select);
     const editing = !this.state.editing;
     this.setState({ editing }, () => {
       if (editing) {

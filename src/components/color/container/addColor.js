@@ -66,7 +66,6 @@ class AddColor extends React.Component {
   };
 
   handleChange = (color) => {
-    console.log(color);
     let isDuplicate = this.props.listColors.some(item => {
       return (item.colorCode === color.hex)
     });
@@ -120,7 +119,6 @@ class AddColor extends React.Component {
         state.nameColor = "",
         state)
       );
-      console.log(this.state);
     } else if (isDuplicate) {
       this.setState(state => (
         state.error.duplicate.isDuplicate = true,
@@ -196,12 +194,10 @@ class AddColor extends React.Component {
       });
   }
   handleDelete = async(key)=>{
-    console.log(key);
     const { deleteColor } = this.props;
     const flagAdd = await deleteColor(key);
   }
   handleEdit = (record) =>{
-        console.log(record);
         this.setState({
             visible:true,
             colorId : record.colorId,

@@ -5,7 +5,6 @@ import '../../css/modal.css';
 class LoginModal extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
         this.state = {
             modal2Visible: props.location.state.modal,
             viewType : true,
@@ -22,7 +21,6 @@ class LoginModal extends Component {
     this.setState({forGotPass :!this.state.forGotPass});
   }
   onChange = (date, dateString) => {
-    console.log(date, dateString);
   }
   back = ()=>{
     this.setState({viewType :true});
