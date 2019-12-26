@@ -60,21 +60,24 @@ const mapDispatchToProps = (dispatch) => ({
 class AddProduct extends Component {
     constructor(props){
         super(props);
-        let idProduct = ''
+        console.log(props);
+        let idProduct = '',isFrontalClosure = false
         const search = props.location.search;
         const params = new URLSearchParams(search);
         const mode = params.get('mode');
         if(mode === 'update') {
           idProduct = props.location.state.idProduct
+          isFrontalClosure = props.location.state.isFrontalClosure
           this.state = {
             loading: true,
             previewVisible: false,
             previewImage: '',
             fileList : [],
             isEnablelength : false,
-            isEnableFrontal : false,
+            isEnableFrontal : isFrontalClosure === true ? false : true,
             product : [],
             idProductUpdate : idProduct,
+            isClosureFrontal : isFrontalClosure,
             colorOfProductType: [],
             sizeFrontalClosure : [],
             lengthOfProductType : [],
@@ -90,6 +93,7 @@ class AddProduct extends Component {
             isEnableFrontal : true,
             product : [],
             idProductUpdate : idProduct,
+            isClosureFrontal : isFrontalClosure,
             colorOfProductType: [],
             sizeFrontalClosure : [],
             lengthOfProductType : [],
@@ -208,7 +212,7 @@ class AddProduct extends Component {
         if(this.state.initData !== undefined && this.state.update !== undefined){
         let productType = this.state.initData.productypeData.find(data => data.productTypeId === this.state.update.idProductType);
         let  colorOfProductType = productType['colors'];
-        let sizeFrontalClosure
+        let sizeFrontalClosure = []
         if (productType.productTypeName === 'Closure' || productType.productTypeName === 'Frontal') {
             sizeFrontalClosure = productType.frontalClosure.map(item =>({'sizeFrontal' : item.sizeFrontal}))
             lengthOfProductType = productType.frontalClosure.filter(item => item.sizeFrontal === this.state.update.frontal).map(data => ({'id' : data.sizeId,'length' : data.length}))
@@ -326,7 +330,7 @@ class AddProduct extends Component {
           style={{ width: 200 }}
           placeholder="Select size"
           optionFilterProp="children"
-          defaultValue = {this.state.update.id}
+          defaultValue = {this.state.update.idSize}
           onChange ={this.onChange}>
              {dataLength}
       </Select>

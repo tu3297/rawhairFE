@@ -126,10 +126,12 @@ class ListProduct extends Component {
     }
     update = (value) => {
       console.log(value);
+      let isFrontalClosure = false;
+      if(value.productTypeName === 'Closure' || value.productTypeName === 'Frontal') isFrontalClosure = true
       this.props.history.push({
         pathname :`${this.props.match.path}/createProduct`,
         search : '?mode=update',
-        state : { idProduct : value }
+        state : { idProduct : value.idProduct ,isFrontalClosure : isFrontalClosure}
      })
     }
     render(){
@@ -142,7 +144,7 @@ class ListProduct extends Component {
     title: 'Id',
     dataIndex: 'idProduct',
     key: 'idProduct',
-    render: (text,record) => <a style ={{textDecoration : 'underline'}} onClick ={ () => this.update(record.idProduct)} value ={record.idProduct}>{text}</a>,
+    render: (text,record) => <a style ={{textDecoration : 'underline'}} onClick ={ () => this.update(record)} value ={record.idProduct}>{text}</a>,
   },
   {
     title: 'Product Type',
