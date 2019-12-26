@@ -47,13 +47,13 @@ export default function productType(state = initState,action){
     case types.FETCH_LIST_PRODUCTTYPE_COLOR : {
       return {
         ...state,
-        isFetching : false
+        isFetching : true
       }
     }
     case types.FETCH_LIST_PRODUCTTYPE_COLOR_SUCCESS : {
       return {
         ...state,
-        isFetching :false,
+        isFetching : false,
         listProductTypeColor : action.payload
       }
   }

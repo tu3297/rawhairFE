@@ -1,8 +1,8 @@
 import api from '../../../commom/AjaxUltil';
-export function getNextIdApi(action) {
-  const getNextId = 'product/getNextId';
+export function getDataApi(action) {
+  const getData = 'product/getData';
   return api.get(
-    getNextId, 
+    getData, 
     null, 
   );
 }

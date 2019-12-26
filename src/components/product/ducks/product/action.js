@@ -1,10 +1,10 @@
 import * as types from '../../ducks/product/type'
-export const getNextId = () =>({
-    type : types.GET_ID,
+export const getData = () =>({
+    type : types.GET_DATA,
     payload : ['a']
 });
-export const getNextIdSuccess = (payload) => ({
-    type : types.GET_ID_SUCCESS,
+export const getDataSuccess = (payload) => ({
+    type : types.GET_DATA_SUCCESS,
     payload : payload
 });
 export const saveProduct = (data) =>({

@@ -3,11 +3,11 @@ import {
     call 
   } from 'redux-saga/effects';
   import {productAction} from '../ducks/product'
-  import { getNextIdApi,saveProductApi,getAllProductApi,getProductApi} from '../apis/Product'
-  export function* getNextId(action){
+  import { getDataApi,saveProductApi,getAllProductApi,getProductApi} from '../apis/Product'
+  export function* getData(action){
     try{
-      const response = yield call(getNextIdApi,action);
-      yield put(productAction.getNextIdSuccess(response));
+      const response = yield call(getDataApi,action);
+      yield put(productAction.getDataSuccess(response));
    } catch(error){
      console.log(error);
    }

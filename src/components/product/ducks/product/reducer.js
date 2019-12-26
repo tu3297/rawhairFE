@@ -3,18 +3,19 @@ const initState = {
     isFetching: false,
   }
 export default function product(state = initState,action){
+  console.log(action);
    switch(action.type){
-    case types.GET_ID :{
+    case types.GET_DATA :{
          return {
            ...state,
            isFetching : true,
          }
     }
-    case types.GET_ID_SUCCESS :{
+    case types.GET_DATA_SUCCESS :{
         return {
           ...state,
           isFetching : false,
-          id : action.payload.Id
+          initData : action.payload
         }
    }
    case types.SAVE_PRODUCT :{
@@ -53,7 +54,7 @@ export default function product(state = initState,action){
     return {
     ...state,
     isFetching : false,
-    product : action.payload
+    productUpdate : action.payload
    }
    }
     default: 
