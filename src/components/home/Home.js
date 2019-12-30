@@ -45,7 +45,7 @@ class Home extends Component {
                 <div className ="col-8">
                   <div className ="row">
                     <div className ="col-4">
-                       <img src ="https://static.wixstatic.com/media/2ed9ca_5a0ea56469014c42996dbe06c6db5774~mv2.png/v1/fill/w_235,h_235,al_c,q_80,usm_0.66_1.00_0.01/2ed9ca_5a0ea56469014c42996dbe06c6db5774~mv2.webp"></img>
+                       {/* <img src ="https://static.wixstatic.com/media/2ed9ca_5a0ea56469014c42996dbe06c6db5774~mv2.png/v1/fill/w_235,h_235,al_c,q_80,usm_0.66_1.00_0.01/2ed9ca_5a0ea56469014c42996dbe06c6db5774~mv2.webp"></img> */}
                     </div>
                     <div class ="col-8 my-auto">
                    <Search

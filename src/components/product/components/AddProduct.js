@@ -61,6 +61,7 @@ class AddProduct extends Component {
     constructor(props){
         super(props);
         console.log(props);
+        this._isMounted = false;
         let idProduct = '',isFrontalClosure = false
         const search = props.location.search;
         const params = new URLSearchParams(search);
@@ -102,6 +103,7 @@ class AddProduct extends Component {
       }
     }
     componentDidMount(){
+    this._isMounted = true;
     let { fetchGetAllProductType , getData , fetchGetProduct } = this.props;
     if(this.state.idProductUpdate !== "") {
         let data = {
@@ -112,6 +114,9 @@ class AddProduct extends Component {
       fetchGetAllProductType();
       getData();
     }
+    componentWillUnmount() {
+     this._isMounted = false
+   }
     componentWillReceiveProps(nextProps) {
       this.setState({
         ...this.state,
@@ -198,15 +203,29 @@ class AddProduct extends Component {
            let productData = this.state.product;
            saveProduct(productData)
     }
+    handleChange = ({ fileList }) =>{
+       console.log(fileList)
+       this.setState({ fileList });
+    }
     render(){
+      if(this.state.initData !== undefined || (this.state.mode === 'update' && this.state.update !== undefined)){
       this.uploaderProps = {
         name : "file",
         listType :"picture-card",
         className : "avatar-uploader",
         showUploadList : true,
-        action : 'http://localhost:5000/upload?id=' + this.state.product.idProduct,
+        action : 'http://localhost:5000/upload?id=' + (this.state.mode !== 'update' ? this.state.initData.idProduct : this.state.update.idProduct)+'',
         data : (file) => new FormData().append('file',file),
-       } 
+        onStart : (file) => {
+               console.log(file.name)
+        },
+        onSuccess(file){
+          if(this._isMounted){
+             console.log(file);
+          }
+        }
+      }
+    }
        let dataProductType,dataColor,dataLength,dataSizeFrontal,sizeFrontalClosure,lengthOfProductType
        if(this.state.mode === 'update'){
         if(this.state.initData !== undefined && this.state.update !== undefined){
@@ -234,7 +253,8 @@ class AddProduct extends Component {
          dataLength = (this.state.lengthOfProductType !== undefined ? this.state.lengthOfProductType : []).map(item => <Option value = {item.id} key ='size'> {item.length}</Option>)
          dataSizeFrontal = sizeFrontalClosure.map(item => <Option value = {item} key ='frontal'> {item}</Option>)
         }
-        const { previewVisible, previewImage, fileList } = this.state;
+        const { previewVisible, previewImage ,fileList} = this.state;
+        console.log(fileList);
         const uploadButton = (
             <div>
               <Icon type = {this.state.loading ? "loading" : "plus"} />
@@ -254,6 +274,7 @@ class AddProduct extends Component {
                     {...this.uploaderProps}
                     beforeUpload={beforeUpload}
                     onChange={this.handleChange}
+                    fileList={fileList}
                     onPreview={this.handlePreview}>
                     {uploadButton}
                </Upload>
