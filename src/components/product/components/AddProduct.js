@@ -123,7 +123,7 @@ class AddProduct extends Component {
         listProductType : nextProps.listProductType,
         product : {
            ...this.state.product,
-           idProduct : nextProps.idProduct
+           idProduct : nextProps.initData !== undefined ?nextProps.initData.idProduct : ""
         },
         initData : nextProps.initData,
         loading : nextProps.isFetching,
@@ -201,6 +201,7 @@ class AddProduct extends Component {
     save = () => {
            let {saveProduct} = this.props;
            let productData = this.state.product;
+           console.log(productData)
            saveProduct(productData)
     }
     handleChange = ({ fileList }) =>{
@@ -208,13 +209,14 @@ class AddProduct extends Component {
        this.setState({ fileList });
     }
     render(){
+      console.log(this.state)
       if(this.state.initData !== undefined || (this.state.mode === 'update' && this.state.update !== undefined)){
       this.uploaderProps = {
         name : "file",
         listType :"picture-card",
         className : "avatar-uploader",
         showUploadList : true,
-        action : 'http://localhost:5000/upload?id=' + (this.state.mode !== 'update' ? this.state.initData.idProduct : this.state.update.idProduct)+'',
+        action : 'http://localhost:5000/upload?id=' + (this.state.mode !== 'update' ? this.state.initData.idProduct : this.state.idProductUpdate)+'',
         data : (file) => new FormData().append('file',file),
         onStart : (file) => {
                console.log(file.name)
