@@ -73,7 +73,12 @@ class AddProduct extends Component {
             loading: true,
             previewVisible: false,
             previewImage: '',
-            fileList : [],
+            fileList : [ {
+              uid: '-1',
+              name: 'ro1.png',
+              status: 'done',
+              url: '/static/imagesro1.jpg',
+            }],
             isEnablelength : false,
             isEnableFrontal : isFrontalClosure === true ? false : true,
             product : [],
@@ -222,9 +227,7 @@ class AddProduct extends Component {
                console.log(file.name)
         },
         onSuccess(file){
-          if(this._isMounted){
              console.log(file);
-          }
         }
       }
     }
@@ -256,7 +259,6 @@ class AddProduct extends Component {
          dataSizeFrontal = sizeFrontalClosure.map(item => <Option value = {item} key ='frontal'> {item}</Option>)
         }
         const { previewVisible, previewImage ,fileList} = this.state;
-        console.log(fileList);
         const uploadButton = (
             <div>
               <Icon type = {this.state.loading ? "loading" : "plus"} />
