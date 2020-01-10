@@ -223,12 +223,6 @@ class AddProduct extends Component {
         showUploadList : true,
         action : 'http://localhost:5000/upload?id=' + (this.state.mode !== 'update' ? this.state.initData.idProduct : this.state.idProductUpdate)+'',
         data : (file) => new FormData().append('file',file),
-        onStart : (file) => {
-               console.log(file.name)
-        },
-        onSuccess(file){
-             console.log(file);
-        }
       }
     }
        let dataProductType,dataColor,dataLength,dataSizeFrontal,sizeFrontalClosure,lengthOfProductType
