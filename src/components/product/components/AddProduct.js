@@ -73,12 +73,7 @@ class AddProduct extends Component {
             loading: true,
             previewVisible: false,
             previewImage: '',
-            fileList : [ {
-              uid: '-1',
-              name: 'ro1.png',
-              status: 'done',
-              url: '/static/imagesro1.jpg',
-            }],
+            fileList : [],
             isEnablelength : false,
             isEnableFrontal : isFrontalClosure === true ? false : true,
             product : [],
@@ -87,7 +82,7 @@ class AddProduct extends Component {
             colorOfProductType: [],
             sizeFrontalClosure : [],
             lengthOfProductType : [],
-            mode : mode
+            mode : mode,
         };
         } else {
         this.state = {
@@ -103,7 +98,7 @@ class AddProduct extends Component {
             colorOfProductType: [],
             sizeFrontalClosure : [],
             lengthOfProductType : [],
-            mode : mode
+            mode : mode,
         };
       }
     }
@@ -206,12 +201,13 @@ class AddProduct extends Component {
     save = () => {
            let {saveProduct} = this.props;
            let productData = this.state.product;
-           console.log(productData)
            saveProduct(productData)
     }
-    handleChange = ({ fileList }) =>{
-       console.log(fileList)
-       this.setState({ fileList });
+    handleChangeUpload = ({ fileList ,file}) =>{
+      console.log(file)
+       this.setState({ 
+         fileList : fileList
+       });
     }
     render(){
       console.log(this.state)
@@ -224,7 +220,6 @@ class AddProduct extends Component {
         action : 'http://localhost:5000/upload?id=' + (this.state.mode !== 'update' ? this.state.initData.idProduct : this.state.idProductUpdate)+'',
         data : (file) => new FormData().append('file',file),
       }
-    }
        let dataProductType,dataColor,dataLength,dataSizeFrontal,sizeFrontalClosure,lengthOfProductType
        if(this.state.mode === 'update'){
         if(this.state.initData !== undefined && this.state.update !== undefined){
@@ -252,7 +247,19 @@ class AddProduct extends Component {
          dataLength = (this.state.lengthOfProductType !== undefined ? this.state.lengthOfProductType : []).map(item => <Option value = {item.id} key ='size'> {item.length}</Option>)
          dataSizeFrontal = sizeFrontalClosure.map(item => <Option value = {item} key ='frontal'> {item}</Option>)
         }
-        const { previewVisible, previewImage ,fileList} = this.state;
+        let { previewVisible, previewImage ,fileList} = this.state;
+        if(this.state.update !== undefined){
+        let listImage = ((this.state.update.urlImage !== undefined) ? this.state.update.urlImage : []).map((item,index) => (   
+          {
+             'uid' : this.state.update.ref_key[index],
+             'name' : item,
+             'url' : 'http://localhost:5000/getImage?image=images' + item,
+             'status' :'done'
+          } 
+        ))
+        fileList =listImage
+        console.log(fileList)
+        }
         const uploadButton = (
             <div>
               <Icon type = {this.state.loading ? "loading" : "plus"} />
@@ -264,14 +271,14 @@ class AddProduct extends Component {
           : (
             <div className="container">
                 { this.state.mode === 'update' ?  
-                <Input size="small" disabled  value = {this.state.update.idProduct}  style={{ width: 250 }} /> :
+                <Input size="small" disabled  value = {this.state.idProductUpdate}  style={{ width: 250 }} /> :
                 <Input size="small" disabled  value = {this.state.initData.idProduct}  style={{ width: 250 }} />
                 }
                 <div className="row">
                 <Upload
                     {...this.uploaderProps}
                     beforeUpload={beforeUpload}
-                    onChange={this.handleChange}
+                    onChange={this.handleChangeUpload}
                     fileList={fileList}
                     onPreview={this.handlePreview}>
                     {uploadButton}
@@ -281,7 +288,7 @@ class AddProduct extends Component {
       </Modal>
       </div>
         <div className="row">
-      {this.state.mode === 'update' ?
+      {this.state.mode === 'update' && this.state.update !== undefined ?
       <Select
               style={{ width: 200 }}
               placeholder="Select product type"
@@ -301,7 +308,7 @@ class AddProduct extends Component {
       }
       </div>
       <div className="row">
-      {this.state.mode === 'update' ?
+      {this.state.mode === 'update'  && this.state.update !== undefined?
         <Select
               style={{ width: 200 }}
               placeholder="Select color"
@@ -321,7 +328,7 @@ class AddProduct extends Component {
     }
     </div>
       <div className ="row">
-      {this.state.mode === 'update' ?
+      {this.state.mode === 'update'  && this.state.update !== undefined ?
       <Select
           disabled = {this.state.isEnableFrontal}
           style={{ width: 200 }}
@@ -343,7 +350,7 @@ class AddProduct extends Component {
     }
       </div>
         <div className ="row">
-        {this.state.mode === 'update' ?
+        {this.state.mode === 'update'  && this.state.update !== undefined?
       <Select
           disabled = {this.state.isEnablelength}
           style={{ width: 200 }}
@@ -365,7 +372,7 @@ class AddProduct extends Component {
     }
         </div>
         <div className ="row">
-        {this.state.mode === 'update'? 
+        {this.state.mode === 'update'  && this.state.update !== undefined? 
          <Input size="small" defaultValue ={this.state.update.price} placeholder ="PRICE" style={{ width: 250 }} key = "price" onChange = {this.InputPriceChange}/>
          :   <Input size="small" placeholder ="PRICE" style={{ width: 250 }} key = "price" onChange = {this.InputPriceChange}/>
         }
@@ -376,6 +383,7 @@ class AddProduct extends Component {
         <Button type="primary" onClick = {this.save}>Save</Button>
        </div>))
     }
+}
 }
 export default connect(
   mapStateToProps,

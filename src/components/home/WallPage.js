@@ -7,7 +7,6 @@ class WallPage extends Component {
     }
     render(){
         return (
-           
                  <SlideBarner></SlideBarner>
            
         );
