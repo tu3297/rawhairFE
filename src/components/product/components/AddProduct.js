@@ -210,7 +210,6 @@ class AddProduct extends Component {
        });
     }
     render(){
-      console.log(this.state)
       if(this.state.initData !== undefined || (this.state.mode === 'update' && this.state.update !== undefined)){
       this.uploaderProps = {
         name : "file",
@@ -220,6 +219,7 @@ class AddProduct extends Component {
         action : 'http://localhost:5000/upload?id=' + (this.state.mode !== 'update' ? this.state.initData.idProduct : this.state.idProductUpdate)+'',
         data : (file) => new FormData().append('file',file),
       }
+    }
        let dataProductType,dataColor,dataLength,dataSizeFrontal,sizeFrontalClosure,lengthOfProductType
        if(this.state.mode === 'update'){
         if(this.state.initData !== undefined && this.state.update !== undefined){
@@ -258,7 +258,6 @@ class AddProduct extends Component {
           } 
         ))
         fileList =listImage
-        console.log(fileList)
         }
         const uploadButton = (
             <div>
@@ -383,7 +382,6 @@ class AddProduct extends Component {
         <Button type="primary" onClick = {this.save}>Save</Button>
        </div>))
     }
-}
 }
 export default connect(
   mapStateToProps,

@@ -31,6 +31,13 @@
 .header  li a:active {
     border-bottom: 2px solid #404040;
 }
+.logo{
+    width: 120px;
+    height: px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 28px 16px 0;
+    float: left;
+}
 .main-nav {
     float: right;
     list-style: none;
