@@ -39,7 +39,7 @@ class EditableCell extends React.Component {
     });
   };
   getInput = (e) => {
-    let option = this.props.listColor.map(item => <Option value = {item.colorId} >{item.colorName}</Option>)
+    let option = this.props.listProductType.map(item => <Option value = {item.id} >{item.name}</Option>)
     if (this.props.inputType === 'select') {
       return <Select ref={node => (this.input = node)} onBlur={this.save} onChange = {this.change}>
          {option}
@@ -52,9 +52,13 @@ class EditableCell extends React.Component {
     }
   };
   change = e =>{
-    let color = this.props.listColor.filter(item => item.colorId === e);
+    // let idProductType = this.props.listProductType.filter(item => item.id === e);
+    this.setState({
+      productTypeId : e
+    })
  }
   save = e => {
+    console.log('a');
     const { record, handleSave , listColor } = this.props;
     this.form.validateFields((error, values) => {
       if (error && error[e.currentTarget.id]) {
@@ -62,8 +66,12 @@ class EditableCell extends React.Component {
       }
       this.toggleEdit();
       record.editing = this.state.editing;
-      if(this.inputName !== undefined) record.name =  this.inputName.state.value;
-      if(this.inputDes !== undefined) record.description = this.inputDes.state.value;
+      if(typeof e === 'string' && e !== 'pls enter data'){
+        record.parent = this.state.productTypeId;
+      } else {
+          if(this.inputName !== undefined) record.name =  this.inputName.state.value;
+          if(this.inputDes !== undefined) record.description = this.inputDes.state.value;
+      }
       handleSave({...record});
     });
   };
@@ -154,6 +162,11 @@ class AddProductType extends React.Component {
         dataIndex: 'description',
         editable :true
       },
+      {
+        title: 'Parent',
+        dataIndex: 'parent',
+        editable :true
+      },
       // {
       //   title: 'Color',
       //   dataIndex: 'color',
@@ -176,7 +189,8 @@ class AddProductType extends React.Component {
   componentWillReceiveProps(nextProps) {
       this.setState({
         dataSource : nextProps.listProductType,
-        listColor : nextProps.listColor
+        listColor : nextProps.listColor,
+        listProductType : nextProps.listProductType
       })
   }
   onSelectChange = selectedRowKeys => {
@@ -200,6 +214,7 @@ class AddProductType extends React.Component {
       key: count,
       name: 'Pls enter data',
       description: 'Pls enter data',
+      parent : 'Pls enter data',
       editing : false
     };
     this.setState({
@@ -227,7 +242,7 @@ class AddProductType extends React.Component {
   }
   render() {
     const {isFetching} = this.props;
-    const {selectedRowKeys,dataSource } = this.state;
+    const {selectedRowKeys, dataSource } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -247,11 +262,11 @@ class AddProductType extends React.Component {
         ...col,
         onCell: record => ({
           record,
-          inputType :col.dataIndex === 'color' ? 'select' : 'text',
+          inputType :col.dataIndex === 'parent' ? 'select' : 'text',
           editable: col.editable,
           dataIndex: col.dataIndex,
           title: col.title,
-          listColor : this.state.listColor,
+          listProductType : this.state.listProductType,
           handleSave: this.handleSave,
         }),
       };

@@ -40,19 +40,6 @@ class Home extends React.Component {
         super(props);
      
   }
-  selectType = (e) =>{
-   let {fetchGetAllProduct} = this.props;
-   let data = {
-    pageSize : this.state.pageSize,
-    curentPage : this.state.curentPage,
-    id : null,
-    productType : Array.from(e).join(),
-    length : null,
-    color : null,
-    sort : null
-   }
-   //fetchGetAllProduct(data);
-  }
     render(){
       
         return (
