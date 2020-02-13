@@ -36,3 +36,11 @@ export const fetchGetListProductTypeColorSuccess = (payload) => ({
         type : types.FETCH_LIST_PRODUCTTYPE_COLOR_SUCCESS,
         payload : payload
 });
+export const fetchGetListProductTypeHome = () =>({
+        type : types.FETCH_LIST_PRODUCTTYPE_HOME,
+        payload : ['a']
+}); 
+export const fetchGetListProductTypeHomeSuccess = (payload) => ({
+        type : types.FETCH_LIST_PRODUCTTYPE_HOME_SUCCESS,
+        payload : payload
+});

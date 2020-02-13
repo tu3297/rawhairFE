@@ -23,3 +23,7 @@ export function getAllProductTypeColorApi(){
   const getAllProductTypeColor = 'prt/getAllProductTypeColor';
   return api.get(getAllProductTypeColor,null);
 }
+export function getAllProductTypeHomeApi(){
+  const getAllProductTypeHome = 'prt/getProductTypeHome';
+  return api.get(getAllProductTypeHome,null);
+}

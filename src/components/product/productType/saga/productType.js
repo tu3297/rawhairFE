@@ -11,7 +11,8 @@ import {
     fetchaddProductTypeApi,
     deleteProductTypeApi,
     updateProductTypeColor,
-    getAllProductTypeColorApi
+    getAllProductTypeColorApi,
+    getAllProductTypeHomeApi
   } from '../apis/productType';
   export function* createProductType(action){
     try{
@@ -26,6 +27,10 @@ import {
   export function* getListProductType(action) {
     const response = yield call(fetchListProductTypeApi);
     yield put(productTypeAction.fetchGetListProductTypeSuccess(response));
+  }
+  export function* getListProductTypeHome(action) {
+    const response = yield call(getAllProductTypeHomeApi);
+    yield put(productTypeAction.fetchGetListProductTypeHomeSuccess(response));
   }
   export function* deleteProductType(action){
     try{

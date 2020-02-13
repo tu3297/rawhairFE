@@ -57,6 +57,19 @@ export default function productType(state = initState,action){
         listProductTypeColor : action.payload
       }
   }
+  case types.FETCH_LIST_PRODUCTTYPE_HOME : {
+    return {
+      ...state,
+      isFetching : true
+    }
+  }
+  case types.FETCH_LIST_PRODUCTTYPE_HOME_SUCCESS : {
+    return {
+      ...state,
+      isFetching : false,
+      listProductTypeHome : action.payload
+    }
+}
     default: 
     return state
    }

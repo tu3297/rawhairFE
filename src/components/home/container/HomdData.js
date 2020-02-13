@@ -8,15 +8,17 @@ import {
   import { connect } from 'react-redux';
   import React, {Component} from 'react';
   import { List, Card } from 'antd';
-import { Button } from 'antd';
+  import { Tree } from 'antd';
+  const { TreeNode } = Tree;
 const mapStateToProps = (state) => {
+  console.log(state);
     const {listProduct } = state.productReducer.product;
     let isFetching1 = state.productReducer.product.isFetching;
-    const {listProductType  } = state.productTypeReducer.producttype;
+    const {listProductTypeHome } = state.productTypeReducer.producttype;
     let isFetching2 =state.productTypeReducer.producttype.isFetching;
         return {
           isFetching : isFetching1 || isFetching2,
-          listProductType : listProductType,
+          listProductTypeHome : listProductTypeHome,
           listProduct : listProduct
         }  
   };
@@ -24,8 +26,8 @@ const mapStateToProps = (state) => {
   fetchGetAllProduct : (data) => {
     dispatch(productAction.getAllProduct(data));
   },
-  fetchGetAllProductType : () => {
-    dispatch(productTypeAction.fetchGetListProductType());
+  fetchGetAllProductTypeHome : () => {
+    dispatch(productTypeAction.fetchGetListProductTypeHome());
   },
   })
   class HomdeData extends React.Component {
@@ -33,12 +35,20 @@ const mapStateToProps = (state) => {
         super(props);
         this.state ={
             pageSize : Constants.PAGE_SIZE,
-            curentPage : 1
+            curentPage : 1,
+            isFetching : true,
+            expandedKeys: [],
+            selectedKeys: [],
           }
     }
+    onExpand = expandedKeys => {
+      this.setState({
+        expandedKeys,
+      });
+    };
     componentDidMount(){
-        let {fetchGetAllProduct,fetchGetAllProductType} = this.props;
-       fetchGetAllProductType();
+        let {fetchGetAllProduct,fetchGetAllProductTypeHome} = this.props;
+        fetchGetAllProductTypeHome();
         let data = {
           pageSize : this.state.pageSize,
           curentPage : this.state.curentPage,
@@ -65,37 +75,44 @@ const mapStateToProps = (state) => {
       }
       componentWillReceiveProps(nextProps) {
         this.setState({
-          listProductType : nextProps.listProductType,
+          listProductTypeHome : nextProps.listProductTypeHome,
           isFetching : nextProps.isFetching,
           listProduct : nextProps.listProduct
         })
       }
       productSelect(idProductType){
-
+           console.log(idProductType)
       }
+      renderTreeNodes = (data) =>
+            data.map(item => {
+              if (item.children) {
+                return (
+                  <TreeNode title={item.title} key={item.key} dataRef={item}>
+                    {this.renderTreeNodes(item.children)}
+                  </TreeNode>
+                );
+              }
+              return <TreeNode key={item.key} {...item} />;
+    });
     render(){
         console.log(this.state)
-        const dataType = this.state.listProductType !== undefined ? this.state.listProductType.filter((item) => {
-                  return item.parent === '0'
-        }) : []
+        if(!this.state.isFetching){
+        const treeData = this.state.listProductTypeHome
         let seem = {}
         const dataProduct = this.state.listProduct !== undefined ? this.state.listProduct.filter((item) => {
           let k = item.idProductType
           return seem.hasOwnProperty(k) ? false : (seem[k]= true)
         }) : []
-        console.log(seem)
         return(
                 <div className ="container">
                 <div className ="float-left col-2">
-                    <List
-                        size = "large"
-                        dataSource={dataType}
-                        itemLayout ="vertical"
-                        renderItem={item => (
-                            <List.Item>
-                                <Button type="primary" onClick={() => this.selectType(item.id)}>{item.name}</Button>
-                        </List.Item>
-                        )}/>
+                        <Tree
+                            onExpand={this.onExpand}
+                            expandedKeys={this.state.expandedKeys}
+                            onSelect={this.onSelect}
+                            selectedKeys={this.state.selectedKeys}>
+                          {this.renderTreeNodes(treeData)}
+                    </Tree>
                 </div>
                 <div className = "float-left col-10">
                     <List 
@@ -114,7 +131,10 @@ const mapStateToProps = (state) => {
                         )}/>
                 </div>
                 </div>
-        )}
+        )} else {
+          return null
+        }
+      }
 }
 export default connect(
     mapStateToProps,
