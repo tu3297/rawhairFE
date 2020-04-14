@@ -31,3 +31,11 @@ export const getProductSuccess = (payload) => ({
     type : types.GET_PRODUCT_SUCCESS,
     payload : payload
 });
+export const getProductInfo = (data) =>({
+    type : types.GET_PRODUCT_INFO,
+    payload : data
+});
+export const getProductInfoSuccess = (payload) => ({
+    type : types.GET_PRODUCT_INFO_SUCCESS,
+    payload : payload
+});

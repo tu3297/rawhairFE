@@ -80,8 +80,8 @@ const mapStateToProps = (state) => {
           listProduct : nextProps.listProduct
         })
       }
-      productSelect(idProductType){
-           console.log(idProductType)
+      productSelect(idProductType,productTypeName){
+           this.props.history.push(`/home/productInfo`,{idProductType:idProductType, productTypeName : productTypeName});
       }
       renderTreeNodes = (data) =>
             data.map(item => {
@@ -125,11 +125,18 @@ const mapStateToProps = (state) => {
                             <List.Item>
                             <Card
                              title={item.idProduct}
-                             cover ={<img  src = {`http://localhost:5000/getImage?image=images${item.urlImage[0]}`} onClick = {() => this.productSelect(item.idProductType)}/>}>
-                               {item.price}$</Card>
+                             cover ={<img  src = {`http://localhost:5000/getImage?image=images${item.urlImage[0]}`} onClick = {() => this.productSelect(item.idProductType,item.productTypeName)}/>}>
+                               {item.price}$
+                            </Card>
                             </List.Item>
                         )}/>
                 </div>
+                {/* <Switch>
+                <Route exact path ="/home/productInfo" component={props => <ProductInfo
+                     {...props}
+                     idProductType={this.state.idProductType}
+                     />} />
+                </Switch> */}
                 </div>
         )} else {
           return null

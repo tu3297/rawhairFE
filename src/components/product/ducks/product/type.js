@@ -6,4 +6,6 @@ export const GET_ALL_PRODUCT = 'product/GET_ALL_PRODUCT';
 export const GET_ALL_PRODUCT_SUCCESS = 'product/GET_ALL_PRODUCT_SUCCESS';
 export const GET_PRODUCT = 'product/GET_PRODUCT';
 export const GET_PRODUCT_SUCCESS = 'product/GET_PRODUCT_SUCCESS';
+export const GET_PRODUCT_INFO = 'product/GET_PRODUCT_INFO';
+export const GET_PRODUCT_INFO_SUCCESS = 'product/GET_PRODUCT_INFO_SUCCESS';
 

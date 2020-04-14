@@ -27,3 +27,10 @@ export function getProductApi(productData) {
       productData, 
     );
   }
+  export function getAllProductInfoApi(productData) {
+    const getInfoProduct = 'product/getInfoProduct';
+    return api.get(
+      getInfoProduct, 
+      productData, 
+    );
+  }

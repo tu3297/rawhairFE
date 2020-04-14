@@ -8,6 +8,8 @@ import ProductTypeSize from '../product/productTypeSize/addProductTypeSize.js';
 import ListProduct from '../product/components/ListProduct'
 import PTColor from '../config/component/ProductTypeColor/container/PTColor'
 import AddProduct from '../product/components/AddProduct'
+import ProductInfo from '../home/container/ProductInfo.js';
+import { Layout } from 'antd';
 const subMenu = [
     {
       id: 0,
@@ -75,8 +77,9 @@ class AdminManager extends Component {
     }
     render() {
       const match = this.props.match;
+      console.log(match.path)
         return (
-            <div className="container">
+        <div>
           <div class = "main-nav-menu">
           <Sidebar
               title={''}

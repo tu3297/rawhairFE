@@ -76,24 +76,23 @@ class ListProduct extends Component {
          listProduct : nextProps.listProduct
       });
     }
-    onChange = (value,key) =>{
-
-        if(key[0].key === 'length'){
+    onChangeLength = (value,key) =>{
           this.setState({
               ...this.state,
               length : value
           })
-       } else if (key[0].key === "color"){
+    }
+    onChangeColor = (value,key) =>{
+      this.setState({
+          ...this.state,
+          color  : value
+      })
+    }
+    onChangePrt = (value,key) =>{
         this.setState({
-            ...this.state,
-            color : value
-        })
-        } else if (key[0].key === "productType"){
-          this.setState({
-              ...this.state,
-              producttype : value
-          })
-         }
+        ...this.state,
+        producttype  : value
+       })
     }
     handleTable = (pagination,filters,sorter) =>{
       let {fetchGetAllProduct} = this.props;
@@ -136,7 +135,7 @@ class ListProduct extends Component {
     }
     render(){
     const length = [8,10,12,14,16,18,20,22,24,26,28,30,32,34,36].map(item => item +"");
-    let lengthData = length.map(item => <Option key="length" value ={item} >{item}</Option>)
+    let lengthData = length.map(item => <Option key="length" value ={item}>{item}</Option>)
     let colorData = this.state.listColor.map(item => <Option key="color" value ={item.colorId} >{item.colorName}</Option>)
     let producttypeData = this.state.listProductType.map(item => <Option key="productType" value ={item.id} >{item.name}</Option>)
    const columns = [
@@ -193,13 +192,13 @@ const match = this.props.match;
     <div> 
     <div>
        <Input style={{ width: 200 }} placeholder="ID" />
-       <Select style={{ width: 200 }} placeholder="Length" mode="multiple" onChange ={this.onChange}>
+       <Select style={{ width: 200 }} placeholder="Length" mode="multiple" onChange ={this.onChangeLength}>
           {lengthData}
        </Select>
-       <Select   style={{ width: 200 }} placeholder="Color" mode="multiple" onChange ={this.onChange}>
+       <Select   style={{ width: 200 }} placeholder="Color" mode="multiple" onChange ={this.onChangeColor}>
           {colorData}
        </Select>
-       <Select   style={{ width: 200 }} placeholder="Product Type" mode="multiple" onChange ={this.onChange}>
+       <Select   style={{ width: 200 }} placeholder="Product Type" mode="multiple" onChange ={this.onChangePrt}>
           {producttypeData}
        </Select>
        <Button shape="circle" icon="search" onClick = {this.search}/>

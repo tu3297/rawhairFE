@@ -56,6 +56,19 @@ export default function product(state = initState,action){
     isFetching : false,
     productUpdate : action.payload
    }
+  }
+   case types.GET_PRODUCT_INFO : {
+    return {
+    ...state,
+    isFetching : true,
+   }
+   }
+   case types.GET_PRODUCT_INFO_SUCCESS : {
+    return {
+    ...state,
+    isFetching : false,
+    productInfo : action.payload
+   }
    }
     default: 
     return state

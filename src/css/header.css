@@ -59,3 +59,16 @@
   .ant-carousel .slick-slide h3 {
     color: #fff;
   }
+  ul.images {
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+    width: 50%;
+    overflow-x: auto;
+  }
+  
+  ul.images li {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+  }
