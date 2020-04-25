@@ -1,4 +1,4 @@
-import { Drawer, Button } from 'antd';
+import { Drawer, Button, Form , Input } from 'antd';
 import { connect } from 'react-redux';
 import React, {Component} from 'react';
 import '../../../css/cart.css';
@@ -106,9 +106,14 @@ class FloatCart extends Component {
           visible={this.state.isOpen}>
           {products}
           <div className ="row">
-             <p>Total quantity {cartData.productQuantity}</p>
-             <br></br>
-             <p>Total {cartData.totalPrice}</p>
+             <Form>
+               <Form.Item>
+                    <Input disabled  addonBefore="Total Quantity" value ={cartData.productQuantity} />
+               </Form.Item>
+               <Form.Item>
+                    <Input disabled  addonBefore="Total Price" value ={cartData.totalPrice} />
+              </Form.Item>
+             </Form>
           </div>
           <Button  style={{ marginRight: 8 }}>
               Check Out
@@ -118,7 +123,6 @@ class FloatCart extends Component {
     );
   }
 }
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps,

@@ -80,24 +80,15 @@ class AdminManager extends Component {
       console.log(match.path)
         return (
         <div>
-          <div class = "main-nav-menu">
-          <Sidebar
-              title={''}
-              content={subMenu}
-              {...this.props}
-            />
-            </div>
-           <div>
               <Switch>
-                <Route path={`${match.path}/color`} component={props => <AddColor  {...props}/>} />
-                <Route path={`${match.path}/size`} component={props => <Size  {...props}/>} />
-                <Route path={`${match.path}/pt`} component={props => <ProductType  {...props}/>} />
+                <Route exact path={`${match.path}/color`} component={props => <AddColor  {...props}/>} />
+                <Route exact path={`${match.path}/size`} component={props => <Size  {...props}/>} />
+                <Route exact path={`${match.path}/pt`} component={props => <ProductType  {...props}/>} />
                 <Route exact path={`${match.path}/prt`} component={props => <ProductTypeSize {...props}/>} />
                 <Route exact path={`${match.path}/product`} component={props => <ListProduct {...props}/>} />
-                <Route path={`${match.path}/config`} component={props => <PTColor {...props}/>} />
+                <Route exact path={`${match.path}/config`} component={props => <PTColor {...props}/>} />
                 <Route exact path={`${match.path}/product/createProduct`} component={props => <AddProduct  {...props}/>} />
               </Switch>
-          </div>
           </div>
         );
       }

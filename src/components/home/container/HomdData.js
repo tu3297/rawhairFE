@@ -9,25 +9,20 @@ import {
   import React, {Component} from 'react';
   import { List, Card } from 'antd';
   import { Tree } from 'antd';
+  import { Row, Col } from 'antd';
   const { TreeNode } = Tree;
 const mapStateToProps = (state) => {
   console.log(state);
     const {listProduct } = state.productReducer.product;
     let isFetching1 = state.productReducer.product.isFetching;
-    const {listProductTypeHome } = state.productTypeReducer.producttype;
-    let isFetching2 =state.productTypeReducer.producttype.isFetching;
         return {
-          isFetching : isFetching1 || isFetching2,
-          listProductTypeHome : listProductTypeHome,
+          isFetching : isFetching1,
           listProduct : listProduct
         }  
   };
   const mapDispatchToProps = (dispatch) => ({
   fetchGetAllProduct : (data) => {
     dispatch(productAction.getAllProduct(data));
-  },
-  fetchGetAllProductTypeHome : () => {
-    dispatch(productTypeAction.fetchGetListProductTypeHome());
   },
   })
   class HomdeData extends React.Component {
@@ -47,8 +42,7 @@ const mapStateToProps = (state) => {
       });
     };
     componentDidMount(){
-        let {fetchGetAllProduct,fetchGetAllProductTypeHome} = this.props;
-        fetchGetAllProductTypeHome();
+        let {fetchGetAllProduct} = this.props;
         let data = {
           pageSize : this.state.pageSize,
           curentPage : this.state.curentPage,
@@ -83,17 +77,6 @@ const mapStateToProps = (state) => {
       productSelect(idProductType,productTypeName){
            this.props.history.push(`/home/productInfo`,{idProductType:idProductType, productTypeName : productTypeName});
       }
-      renderTreeNodes = (data) =>
-            data.map(item => {
-              if (item.children) {
-                return (
-                  <TreeNode title={item.title} key={item.key} dataRef={item}>
-                    {this.renderTreeNodes(item.children)}
-                  </TreeNode>
-                );
-              }
-              return <TreeNode key={item.key} {...item} />;
-    });
     render(){
         console.log(this.state)
         if(!this.state.isFetching){
@@ -104,40 +87,21 @@ const mapStateToProps = (state) => {
           return seem.hasOwnProperty(k) ? false : (seem[k]= true)
         }) : []
         return(
-                <div className ="container">
-                <div className ="float-left col-2">
-                        <Tree
-                            onExpand={this.onExpand}
-                            expandedKeys={this.state.expandedKeys}
-                            onSelect={this.onSelect}
-                            selectedKeys={this.state.selectedKeys}>
-                          {this.renderTreeNodes(treeData)}
-                    </Tree>
-                </div>
-                <div className = "float-left col-10">
-                    <List 
+                  <List 
                         grid={{
                             gutter: 16,
                             column: 4 
                         }}
                          dataSource={dataProduct}
-                        renderItem={item => (
+                         renderItem={item => (
                             <List.Item>
-                            <Card
-                             title={item.idProduct}
-                             cover ={<img  src = {`http://localhost:5000/getImage?image=images${item.urlImage[0]}`} onClick = {() => this.productSelect(item.idProductType,item.productTypeName)}/>}>
-                               {item.price}$
-                            </Card>
+                                 <Card
+                                    title={item.idProduct}
+                                    cover ={<img style={{width:250},{height :250}} src = {`http://localhost:5000/getImage?image=images${item.urlImage[0]}`} onClick = {() => this.productSelect(item.idProductType,item.productTypeName)}/>}>
+                                    {item.price}$
+                                 </Card>
                             </List.Item>
                         )}/>
-                </div>
-                {/* <Switch>
-                <Route exact path ="/home/productInfo" component={props => <ProductInfo
-                     {...props}
-                     idProductType={this.state.idProductType}
-                     />} />
-                </Switch> */}
-                </div>
         )} else {
           return null
         }

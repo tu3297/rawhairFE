@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { Layout,Input, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout,Input, Menu, Breadcrumb, Tree,Avatar } from 'antd';
 import AddColor from '../color/container/addColor.js';
 import 'antd/dist/antd.css';
+import { connect } from 'react-redux';
 import '../../css/header.css';
 import LoginModal from '../modal/LoginModal';
 import { Switch, Route, Link,Redirect } from "react-router-dom";
@@ -11,74 +12,134 @@ import WallPage from './WallPage.js';
 import HomeData from '../home/container/HomdData'
 import ProductInfo from './container/ProductInfo.js';
 import FloatCart from '../floatcart/container/FloatCart';
+import Size from '../size/container/addSize.js';
+import ProductType from '../product/productType/container/addProductType';
+import ProductTypeSize from '../product/productTypeSize/addProductTypeSize.js';
+import ListProduct from '../product/components/ListProduct'
+import PTColor from '../config/component/ProductTypeColor/container/PTColor'
+import AddProduct from '../product/components/AddProduct'
+import { 
+  productTypeAction
+} from '../product/productType/ducks/productType'
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Search } = Input;
+const { TreeNode } = Tree;
 const menu = [
   {
-    id: 0,
+    id: '1',
     text: 'Home',
     link: 'home'
   },
   {
-    id: 1,
+    id: '2',
     text: 'Shop',
     link: 'shop'
   },
   {
-    id: 2,
+    id: '3',
     text: 'Contact Us',
     link: 'contact'
   },
   {
-    id: 3,
+    id: '4',
     text: 'Admin',
     link: 'admin'
   }
 ];
+const mapStateToProps = (state) => {
+  console.log(state);
+    const {listProductTypeHome } = state.productTypeReducer.producttype;
+    let isFetching =state.productTypeReducer.producttype.isFetching;
+        return {
+          isFetching : isFetching,
+          listProductTypeHome : listProductTypeHome,
+        }  
+  };
+  const mapDispatchToProps = (dispatch) => ({
+  fetchGetAllProductTypeHome : () => {
+    dispatch(productTypeAction.fetchGetListProductTypeHome());
+  },
+  })
 class Home extends React.Component {
     constructor(props){
         super(props);
+        this.state = {
+          listProductTypeHome : [],
+          isFetching : false,
+          expandedKeys: [],
+          selectedKeys: [],
+        }
      
   }
-    render(){ 
+  componentDidMount(){
+    let {fetchGetAllProductTypeHome} = this.props;
+    fetchGetAllProductTypeHome();
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      listProductTypeHome : nextProps.listProductTypeHome,
+      isFetching : nextProps.isFetching,
+    })
+  }
+  goHome = () => {
+    this.props.history.push(`/`)
+  }
+    render(){
+        let treeData = []
+        if(!this.state.isFetching) treeData = this.state.listProductTypeHome;
         return (
-               <Layout> 
-                 <Header className="header">
-                 <div className="container">
-                <div className="row">
-                <div className ="col-4">
-                     <ul className="nav">
-                        <li className="nav-link" ><Link to={{
-                          pathname: '/modalLogin',
-                          state: {modal: true}}}>Đăng Nhập</Link>
-                        </li>
-                    </ul>
-                    <div className ="float-right col-5">
+               <Layout>
+                <Header className="header">
+                <Avatar onClick = {() => this.goHome()} size= "large" style={{ color: '#f56a00', backgroundColor: '#fde3cf' }} src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" >U</Avatar>
+               <div className ="float-right col-5">
                       <FloatCart></FloatCart>
-                  </div>
-               </div>
-               </div>
-               </div>
+                  </div> 
                </Header>
-               <div className="container">
+               <Layout>
+                      <Sider width={200} className="site-layout-background">
                         <Sidebar
                         title={''}
                         content={menu}
+                        contentHome = {treeData}
+                        onSelect = {this.onSelect}
                         {...this.props}/>
-               </div>
-               <div>
-              <Switch>
-                <Route path="/modalLogin" component={props => <LoginModal  {...props}/>} />
-                <Route exact path="/home" component={props => <HomeData  {...props}/>} />
-                <Route path="/shop" component={props => <AddColor  {...props}/>} />
-                <Route path="/contact" component={props => <AddColor  {...props}/>} />
-                <Route path="/admin" component={props => <AdminManager  {...props}/>} />
-                <Route path= "/home/productInfo" component={props => <ProductInfo  {...props}/>} />
-              </Switch>
-            </div>     
-            </Layout>
+                      </Sider>
+                   <Layout style={{ padding: '0 24px 24px' }}>
+                        <Breadcrumb style={{ margin: '16px 0' }}>
+                          <Breadcrumb.Item>Home</Breadcrumb.Item>
+                          <Breadcrumb.Item>List</Breadcrumb.Item>
+                          <Breadcrumb.Item>App</Breadcrumb.Item>
+                        </Breadcrumb>
+                        <Content
+                                className="site-layout-background"
+                                style={{
+                                  padding: 24,
+                                  margin: 0,
+                                  minHeight: 280}}>
+                                     <Switch>
+                                          <Route path="/modalLogin" component={props => <LoginModal  {...props}/>} />
+                                          <Route  exact path="/" component={HomeData} />
+                                          <Route exact path="/shop" component={props => <AddColor  {...props}/>} />
+                                          <Route exact path="/contact" component={props => <AddColor  {...props}/>} />
+                                          <Route exact path="/admin" component={props => <AdminManager  {...props}/>} />
+                                          <Route exact path= '/home/productInfo' component={ProductInfo}/>
+                                          <Route exact path= '/admin/color' component={AddColor} />
+                                          <Route exact path='/admin/size' component= {Size} />
+                                          <Route exact path='/admin/pt' component={ProductType} />
+                                          <Route exact path='/admin/prt' component={ProductTypeSize} />
+                                          <Route exact path='/admin/product' component={ListProduct} />
+                                          <Route exact path='/admin/config' component={PTColor} />
+                                          <Route exact path= '/admin/product/createProduct' component={AddProduct} />
+                                    </Switch>          
+                        </Content>
+                    </Layout>
+                    </Layout>
+            </Layout>    
         );
     }
  }
-export default (Home);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Home);;

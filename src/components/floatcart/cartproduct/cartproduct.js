@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Card } from 'antd';
+import { Card,Row,Col, Button } from 'antd';
 import '../../../css/cart.css';
 import {cartAction} from '../../floatcart/duck/cart'
 const { Meta } = Card;
@@ -31,25 +31,27 @@ class CartProduct extends Component {
         let {removeProduct} = this.props
         let product = this.state.product
         console.log(this.state);
+        let title = 
+        <Row gutter = {[16,16]}>
+          <Col span ={8}><Button type = "circle" onClick = {() =>removeProduct(product)}> X </Button></Col>
+          <Col span ={8}>
+              <Button type = "circle" onClick = {this.handleOnDecrease}>-</Button>
+              <span>{this.state.product.product.quantity}</span>
+              <Button type = "circle" onClick = {this.handleOnIncrease}>+</Button>
+          </Col>
+        </Row>
         if(this.state.product.product !== undefined){
         return (
-            <div className="shelf-item">
-              <div className ="shelf-item__thumb">
-              <Card
-                    title = {<span onClick = {() =>removeProduct(product)}> X </span>}
-                    hoverable
-                    style={{ width: 240 }}
-                    cover={<img alt="example" src={`http://localhost:5000/getImage?image=images${this.state.product.product.image[0]}`}  />}>
-                    <Meta title= {this.state.product.product.productTypeName} description= {this.state.product.product.price} />
-                  </Card>
-              </div>
-              <div className="shelf-item__details"></div>
-              <div className="shelf-item__price">
-                  <button  className="change-product-button" onClick = {this.handleOnDecrease}>-</button>
-                  <span>{this.state.product.product.quantity}</span>
-                  <button  className="change-product-button" onClick = {this.handleOnIncrease}>+</button>
-                </div>
-            </div>
+            <Row >              
+                <Col>
+                    <Card
+                          title = {title}
+                          cover={<img alt="example" src={`http://localhost:5000/getImage?image=images${this.state.product.product.image[0]}`}  />}>
+                          <Meta title= {this.state.product.product.productTypeName} description= {this.state.product.product.price} />
+                        </Card>
+                  </Col>
+              </Row>
+
         )
     } else {
       return null;

@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import { Upload, Icon, Modal,message,Button } from 'antd';
+import { Upload, Icon, Modal,message,Button,Form } from 'antd';
 import { Select ,Input} from 'antd';
 import { connect } from 'react-redux';
 import Loading from '../../loading/loading';
@@ -10,6 +10,10 @@ import {
   productAction
 } from '../../product/ducks/product'
 const { Option } = Select;
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
 let productType = null;
 function getBase64(img, callback) {
   return new Promise((resolve, reject) => {
@@ -203,11 +207,10 @@ class AddProduct extends Component {
            let productData = this.state.product;
            saveProduct(productData)
     }
-    handleChangeUpload = ({ fileList ,file}) =>{
-      console.log(file)
-       this.setState({ 
-         fileList : fileList
-       });
+    handleChangeUpload = ({fileList,file}) =>{
+      this.setState(state => (console.log(state),{
+        fileList:  fileList,
+      }));
     }
     render(){
       if(this.state.initData !== undefined || (this.state.mode === 'update' && this.state.update !== undefined)){
@@ -219,7 +222,7 @@ class AddProduct extends Component {
         action : 'http://localhost:5000/upload?id=' + (this.state.mode !== 'update' ? this.state.initData.idProduct : this.state.idProductUpdate)+'',
         data : (file) => new FormData().append('file',file),
       }
-    }
+       }
        let dataProductType,dataColor,dataLength,dataSizeFrontal,sizeFrontalClosure,lengthOfProductType
        if(this.state.mode === 'update'){
         if(this.state.initData !== undefined && this.state.update !== undefined){
@@ -248,8 +251,9 @@ class AddProduct extends Component {
          dataSizeFrontal = sizeFrontalClosure.map(item => <Option value = {item} key ='frontal'> {item}</Option>)
         }
         let { previewVisible, previewImage ,fileList} = this.state;
-        if(this.state.update !== undefined){
-        let listImage = ((this.state.update.urlImage !== undefined) ? this.state.update.urlImage : []).map((item,index) => (   
+        if(this.state.mode !== null){
+         if (this.state.update !== undefined && this.state.fileList.length === 0) {
+        let listImage = this.state.update.urlImage.map((item,index) => (   
           {
              'uid' : this.state.update.ref_key[index],
              'name' : item,
@@ -257,8 +261,9 @@ class AddProduct extends Component {
              'status' :'done'
           } 
         ))
-        fileList =listImage
-        }
+          fileList = listImage
+      }
+    }
         const uploadButton = (
             <div>
               <Icon type = {this.state.loading ? "loading" : "plus"} />
@@ -268,119 +273,129 @@ class AddProduct extends Component {
         return (
           this.state.loading ? <Loading spinning = {this.state.loading}></Loading> 
           : (
-            <div className="container">
-                { this.state.mode === 'update' ?  
-                <Input size="small" disabled  value = {this.state.idProductUpdate}  style={{ width: 250 }} /> :
-                <Input size="small" disabled  value = {this.state.initData.idProduct}  style={{ width: 250 }} />
+            <Form labelCol={{ span: 3 }}
+                  wrapperCol={{ span: 20 }}>
+                <Form.Item >
+                      { this.state.mode === 'update' ?  
+                            <Input size="small" disabled  value = {this.state.idProductUpdate}  style={{ width: 250 }} /> :
+                            <Input size="small" disabled  value = {this.state.initData.idProduct}  style={{ width: 250 }} />
+                      }
+                </Form.Item>
+                <Form.Item>
+                        <Upload
+                            {...this.uploaderProps}
+                            beforeUpload={beforeUpload}
+                            onChange={this.handleChangeUpload}
+                            fileList={fileList}
+                            onPreview={this.handlePreview}>
+                            {uploadButton}
+                      </Upload>
+                          <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                              <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                          </Modal>
+                </Form.Item>
+                <Form.Item name="Product Type"
+                          label="Product Type">
+                      {this.state.mode === 'update' && this.state.update !== undefined ?
+                      <Select
+                              style={{ width: 350 }}
+                              placeholder="Select product type"
+                              optionFilterProp="children"
+                              defaultValue = {this.state.update.idProductType}
+                              onChange ={this.onChange}>
+                          {dataProductType}
+                      </Select>
+                      :
+                      <Select
+                      style={{ width: 350 }}
+                      placeholder="Select product type"
+                      optionFilterProp="children"
+                      onChange ={this.onChange}>
+                          {dataProductType}
+                      </Select>      
+                      }
+                </Form.Item>
+                <Form.Item name="Color"
+                          label="Color"
+                          >
+                      {this.state.mode === 'update'  && this.state.update !== undefined?
+                        <Select
+                              style={{ width: 350 }}
+                              placeholder="Select color"
+                              optionFilterProp="children"
+                              defaultValue = {this.state.update.idColor}
+                              onChange ={this.onChange}>
+                          {dataColor}
+                      </Select>:
+                      <Select
+                      style={{ width: 350 }}
+                      placeholder="Select color"
+                      optionFilterProp="children"
+                      onChange ={this.onChange}>
+                        {dataColor}
+                    </Select>}
+              </Form.Item>
+              <Form.Item name="Frontal Closure"
+                          label="Frontal Closure"
+                          >
+                      {this.state.mode === 'update'  && this.state.update !== undefined ?
+                      <Select
+                          disabled = {this.state.isEnableFrontal}
+                          style={{ width: 350 }}
+                          placeholder="Select size frontal or closure"
+                          optionFilterProp="children"
+                          defaultValue = {this.state.update.frontal}
+                          onChange ={this.onChange}>
+                            {dataSizeFrontal}
+                      </Select>
+                      :
+                      <Select
+                      disabled = {this.state.isEnableFrontal }
+                      style={{ width: 350 }}
+                      placeholder="Select size frontal or closure"
+                      optionFilterProp="children"
+                      onChange ={this.onChange}>
+                        {dataSizeFrontal}
+                    </Select>
+                    }
+            </Form.Item>
+            <Form.Item name="Length"
+                          label="Length"
+                         >
+                    {this.state.mode === 'update'  && this.state.update !== undefined?
+                  <Select
+                      disabled = {this.state.isEnablelength}
+                      style={{ width: 350 }}
+                      placeholder="Select size"
+                      optionFilterProp="children"
+                      defaultValue = {this.state.update.idSize}
+                      onChange ={this.onChange}>
+                        {dataLength}
+                  </Select>
+                  :
+                  <Select
+                  disabled = {this.state.isEnablelength}
+                  style={{ width: 350 }}
+                  placeholder="Select size"
+                  optionFilterProp="children"
+                  onChange ={this.onChange}>
+                    {dataLength}
+              </Select>
                 }
-                <div className="row">
-                <Upload
-                    {...this.uploaderProps}
-                    beforeUpload={beforeUpload}
-                    onChange={this.handleChangeUpload}
-                    fileList={fileList}
-                    onPreview={this.handlePreview}>
-                    {uploadButton}
-               </Upload>
-      <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-          <img alt="example" style={{ width: '100%' }} src={previewImage} />
-      </Modal>
-      </div>
-        <div className="row">
-      {this.state.mode === 'update' && this.state.update !== undefined ?
-      <Select
-              style={{ width: 200 }}
-              placeholder="Select product type"
-              optionFilterProp="children"
-              defaultValue = {this.state.update.idProductType}
-              onChange ={this.onChange}>
-           {dataProductType}
-      </Select>
-      :
-      <Select
-      style={{ width: 200 }}
-      placeholder="Select product type"
-      optionFilterProp="children"
-      onChange ={this.onChange}>
-          {dataProductType}
-      </Select>      
-      }
-      </div>
-      <div className="row">
-      {this.state.mode === 'update'  && this.state.update !== undefined?
-        <Select
-              style={{ width: 200 }}
-              placeholder="Select color"
-              optionFilterProp="children"
-              defaultValue = {this.state.update.idColor}
-              onChange ={this.onChange}>
-           {dataColor}
-      </Select>
-      :
-      <Select
-      style={{ width: 200 }}
-      placeholder="Select color"
-      optionFilterProp="children"
-      onChange ={this.onChange}>
-        {dataColor}
-    </Select>
-    }
-    </div>
-      <div className ="row">
-      {this.state.mode === 'update'  && this.state.update !== undefined ?
-      <Select
-          disabled = {this.state.isEnableFrontal}
-          style={{ width: 200 }}
-          placeholder="Select size frontal or closure"
-          optionFilterProp="children"
-          defaultValue = {this.state.update.frontal}
-          onChange ={this.onChange}>
-             {dataSizeFrontal}
-      </Select>
-      :
-      <Select
-      disabled = {this.state.isEnableFrontal }
-      style={{ width: 200 }}
-      placeholder="Select size frontal or closure"
-      optionFilterProp="children"
-      onChange ={this.onChange}>
-         {dataSizeFrontal}
-     </Select>
-    }
-      </div>
-        <div className ="row">
-        {this.state.mode === 'update'  && this.state.update !== undefined?
-      <Select
-          disabled = {this.state.isEnablelength}
-          style={{ width: 200 }}
-          placeholder="Select size"
-          optionFilterProp="children"
-          defaultValue = {this.state.update.idSize}
-          onChange ={this.onChange}>
-             {dataLength}
-      </Select>
-      :
-      <Select
-      disabled = {this.state.isEnablelength}
-      style={{ width: 200 }}
-      placeholder="Select size"
-      optionFilterProp="children"
-      onChange ={this.onChange}>
-         {dataLength}
-  </Select>
-    }
-        </div>
-        <div className ="row">
-        {this.state.mode === 'update'  && this.state.update !== undefined? 
-         <Input size="small" defaultValue ={this.state.update.price} placeholder ="PRICE" style={{ width: 250 }} key = "price" onChange = {this.InputPriceChange}/>
-         :   <Input size="small" placeholder ="PRICE" style={{ width: 250 }} key = "price" onChange = {this.InputPriceChange}/>
-        }
-        </div>
-        <div className="row">
-        <Input size="large" placeholder="INFO" style={{ width: 250 }} key = "info" onChange = {this.InputInfoChange}/>
-        </div>
-        <Button type="primary" onClick = {this.save}>Save</Button>
-       </div>))
+         </Form.Item>
+         <Form.Item name="Price"
+                          label="Price"
+                          >
+                {this.state.mode === 'update'  && this.state.update !== undefined? 
+                <Input  defaultValue ={this.state.update.price} placeholder ="PRICE" style={{ width: 250 }} key = "price" onChange = {this.InputPriceChange}/>
+                :   <Input  placeholder ="PRICE" style={{ width: 350 }} key = "price" onChange = {this.InputPriceChange}/>
+                }
+         </Form.Item>
+         <Form.Item name="More Info" label ="More Info">
+              <Input.TextArea key ="info" style={{ width: 350 }} key = "info" onChange = {this.InputInfoChange}/>
+        </Form.Item>
+        <Form.Item><Button type="primary" onClick = {this.save}>Save</Button></Form.Item>
+       </Form>))
     }
 }
 export default connect(

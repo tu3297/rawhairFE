@@ -1,4 +1,4 @@
-import { Table, Divider, Tag , Input , Button,Pagination } from 'antd';
+import { Table, Divider, Tag , Input , Button,Pagination ,Form} from 'antd';
 import React,{ Component } from 'react';
 import { Select } from 'antd';
 import { Switch, Route, Link } from "react-router-dom";
@@ -189,21 +189,34 @@ onChange={this.onPageChange}>
 const data = this.state.listProduct;
 const match = this.props.match;
  return (
-    <div> 
+    
     <div>
+      <Form layout = "inline" labelCol = {{ span: 4} } wrapperCol = { {span  : 14} }>
+      <Form.Item>
        <Input style={{ width: 200 }} placeholder="ID" />
+       </Form.Item>
+       <Form.Item>
        <Select style={{ width: 200 }} placeholder="Length" mode="multiple" onChange ={this.onChangeLength}>
           {lengthData}
        </Select>
+       </Form.Item>
+       <Form.Item>
        <Select   style={{ width: 200 }} placeholder="Color" mode="multiple" onChange ={this.onChangeColor}>
           {colorData}
        </Select>
+       </Form.Item>
+       <Form.Item>
        <Select   style={{ width: 200 }} placeholder="Product Type" mode="multiple" onChange ={this.onChangePrt}>
           {producttypeData}
        </Select>
+       </Form.Item>
+       <Form.Item>
        <Button shape="circle" icon="search" onClick = {this.search}/>
+       </Form.Item>
+       <Form.Item>
        <Button type="primary" shape="circle" icon ="plus" onClick = {this.createNew}></Button>
-       </div>
+       </Form.Item>
+       </Form>
     <div> 
         <Table 
           columns={columns} 
