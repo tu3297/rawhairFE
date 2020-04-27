@@ -87,9 +87,6 @@ class Sidebar extends Component {
       expandedKeys,
     });
   };
-  onSelect = (e) => {
-    console.log('onSelect', e.target.textContent)
-  };
   renderTreeNodes = (data) =>
           data.map(item => {
             if (item.children) {
@@ -114,7 +111,7 @@ class Sidebar extends Component {
          let treeData = this.props.contentHome;
              return (
                   <SubMenu key = {element.id} title = {<span>{element.text}</span>} >
-                          <Tree onClick = {this.onSelect}>
+                          <Tree onClick = {this.props.onSelect}>
                               {this.renderTreeNodes(treeData)}
                           </Tree>
                   </SubMenu>)

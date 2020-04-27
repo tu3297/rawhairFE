@@ -21,6 +21,7 @@ import AddProduct from '../product/components/AddProduct'
 import { 
   productTypeAction
 } from '../product/productType/ducks/productType'
+import { configConsumerProps } from 'antd/lib/config-provider';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const { Search } = Input;
@@ -83,7 +84,11 @@ class Home extends React.Component {
     })
   }
   goHome = () => {
-    this.props.history.push(`/`)
+    this.props.history.push(`/`, {productTypeName : ""})
+  }
+  onSelect = (e) => {
+     console.log(e.target.textContent)
+     this.props.history.push(`/`,{ productTypeName : e.target.textContent});
   }
     render(){
         let treeData = []

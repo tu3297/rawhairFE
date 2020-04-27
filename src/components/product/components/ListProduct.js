@@ -57,6 +57,7 @@ class ListProduct extends Component {
       let {fetchGetAllProductType,fetchGetAllColor} = this.props;
       let {fetchGetAllProduct} = this.props;
       let data = {
+        productTypeName: '',
         pageSize : this.state.pageSize,
         curentPage : this.state.curentPage,
         id : this.state.idProduct,
@@ -66,8 +67,8 @@ class ListProduct extends Component {
         sort : this.state.sort.price
     }
       fetchGetAllProduct(data);
-      fetchGetAllColor();
-      fetchGetAllProductType();
+     // fetchGetAllColor();
+      //fetchGetAllProductType();
     }
     componentWillReceiveProps(nextProps) {
       this.setState({

@@ -29,6 +29,7 @@ const mapStateToProps = (state) => {
     constructor(props){
         super(props);
         this.state ={
+            productTypeName: this.props.location.state !== undefined ? this.props.location.state.productTypeName : '',
             pageSize : Constants.PAGE_SIZE,
             curentPage : 1,
             isFetching : true,
@@ -44,6 +45,7 @@ const mapStateToProps = (state) => {
     componentDidMount(){
         let {fetchGetAllProduct} = this.props;
         let data = {
+          productTypeName : this.state.productTypeName,
           pageSize : this.state.pageSize,
           curentPage : this.state.curentPage,
           id : null,
@@ -54,20 +56,19 @@ const mapStateToProps = (state) => {
          }
       fetchGetAllProduct(data);
       }
-      selectType = (e) =>{
+      componentWillReceiveProps(nextProps) {
         let {fetchGetAllProduct} = this.props;
         let data = {
-         pageSize : this.state.pageSize,
-         curentPage : this.state.curentPage,
-         id : null,
-         productType : Array.from(e).join(),
-         length : null,
-         color : null,
-         sort : null
-        }
-        fetchGetAllProduct(data);
-      }
-      componentWillReceiveProps(nextProps) {
+          productTypeName : nextProps.location.state!== undefined ? nextProps.location.state.productTypeName : '',
+          pageSize : this.state.pageSize,
+          curentPage : this.state.curentPage,
+          id : null,
+          productType : null,
+          length : null,
+          color : null,
+          sort : null
+         }
+         if(nextProps.location.state !== this.props.location.state) fetchGetAllProduct(data)
         this.setState({
           listProductTypeHome : nextProps.listProductTypeHome,
           isFetching : nextProps.isFetching,
